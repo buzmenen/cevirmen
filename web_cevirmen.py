@@ -5,13 +5,19 @@ from io import BytesIO
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
-# --- TASARIM VE ARKA PLAN AYARI ---
-# Yeni seçtiğin resmin doğrudan linki
+# --- TASARIM VE ÖLÇEKLENDİRME (CSS) ---
 arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 
 st.markdown(
     f"""
     <style>
+    /* Tüm sayfanın ölçeğini %80 yapıyoruz */
+    html, body, [data-testid="stAppViewContainer"] {{
+        zoom: 0.8; 
+        -moz-transform: scale(0.8); /* Firefox desteği için */
+        -moz-transform-origin: 0 0;
+    }}
+
     .stApp {{
         background-image: url("{arka_plan_resmi}");
         background-attachment: fixed;
@@ -19,44 +25,32 @@ st.markdown(
         background-position: center;
     }}
     
-    /* Yazıları KOYU LACİVERT yapıyoruz (Bu resimde en iyi bu görünür) */
-    h1, h2, h3, p, span, label, .stMarkdown p {{
+    /* Ana kutuyu biraz daha daraltıp kibarlaştırıyoruz */
+    .main .block-container {{
+        background-color: rgba(255, 255, 255, 0.85); 
+        padding: 2.5rem;
+        border-radius: 20px;
+        max-width: 800px; /* Sayfanın çok yayılmasını engeller */
+        margin: auto;
+    }}
+
+    /* Yazı tiplerini biraz küçültüyoruz */
+    h1 {{ font-size: 2rem !important; color: #2c3e50 !important; }}
+    h3 {{ font-size: 1.2rem !important; color: #2c3e50 !important; }}
+    p, span, label {{ 
         color: #2c3e50 !important; 
-        font-weight: 800 !important;
-        text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* Yazıların arkasına hafif aydınlık */
+        font-size: 1rem !important;
+        font-weight: 700 !important;
     }}
 
-    /* Dosya yükleme alanı açıklamaları */
-    .stFileUploader label, .stFileUploader small {{
-        color: #2c3e50 !important;
-    }}
-
-    /* Giriş kutusu tasarımı */
     .stTextInput input {{
-        color: black !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border: 2px solid #5d6d7e !important;
-        border-radius: 10px;
+        font-size: 1rem !important;
+        padding: 10px !important;
     }}
 
-    /* Butonlar (Resimle uyumlu yumuşak bir ton) */
     .stButton>button {{
-        color: white !important;
-        background-color: #5d6d7e !important;
-        border-radius: 12px;
-        font-weight: bold;
-        border: none;
-        transition: 0.3s;
-    }}
-    
-    .stButton>button:hover {{
-        background-color: #2c3e50 !important;
-        transform: scale(1.03);
-    }}
-    
-    /* Tablo verileri siyah kalsın */
-    .stDataFrame div {{
-        color: black !important;
+        font-size: 0.9rem !important;
+        padding: 5px 20px !important;
     }}
     </style>
     """,
@@ -86,39 +80,34 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Çeviri sırasında bir hata oluştu.")
+            st.error("Çeviri hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
 st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel'i yükle:", type=['xlsx'])
+yuklenen_dosya = st.file_uploader("Excel yükle:", type=['xlsx'])
 if yuklenen_dosya is not None:
-    if st.button("Listeye Dahil Et"):
-        try:
-            eski_df = pd.read_excel(yuklenen_dosya)
-            st.session_state.kelimeler = eski_df.to_dict('records')
-            st.success("Liste başarıyla güncellendi!")
-        except:
-            st.error("Dosya okunurken bir hata oluştu.")
+    if st.button("Dahil Et"):
+        eski_df = pd.read_excel(yuklenen_dosya)
+        st.session_state.kelimeler = eski_df.to_dict('records')
+        st.success("Yüklendi!")
 
 st.divider()
 
-# Dil Değiştirme Alanı
+# Dil Değiştirme
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
-col_dil1, col_dil2, col_dil3 = st.columns([2,1,2])
-with col_dil1: st.write(f"**Kaynak:** {kaynak_etiket}")
-with col_dil2: st.button("🔄 Değiştir", on_click=dil_degistir)
-with col_dil3: st.write(f"**Hedef:** {'Türkçe' if st.session_state.hedef_dil == 'tr' else 'İngilizce'}")
+col1, col2, col3 = st.columns([2,1,2])
+with col1: st.write(f"**Kaynak:** {kaynak_etiket}")
+with col2: st.button("🔄 Değiştir", on_click=dil_degistir)
+with col3: st.write(f"**Hedef:** {'Türkçe' if st.session_state.hedef_dil == 'tr' else 'İngilizce'}")
 
-# Kelime Giriş Alanı
-st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
+st.text_input(f"{kaynak_etiket} kelime yaz:", key="yeni_kelime", on_change=kelime_ekle)
 
-# Liste ve İndirme Butonları
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
-    st.write("### 📚 Kaydedilen Kelimeler")
+    st.write("### 📚 Kelime Listesi")
     st.dataframe(df, use_container_width=True)
 
     output = BytesIO()
@@ -127,8 +116,8 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📥 Excel Olarak İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
+        st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        if st.button("🗑️ Listeyi Sıfırla"):
+        if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
