@@ -5,56 +5,56 @@ from io import BytesIO
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
-# --- TASARIM VE HAREKETLİ ARKA PLAN (GIF) ---
-# Gönderdiğin yeni GIF linkini buraya ekledim
-arka_plan_gif = "https://i.hizliresim.com/4n7keha.gif"
+# --- TASARIM VE ARKA PLAN AYARI ---
+# Yeni seçtiğin resmin doğrudan linki
+arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 
 st.markdown(
     f"""
     <style>
     .stApp {{
-        background-image: url("{arka_plan_gif}");
+        background-image: url("{arka_plan_resmi}");
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
     }}
     
-    /* Yazıları SİYAH/KOYU LACİVERT ve çok belirgin yapıyoruz */
+    /* Yazıları KOYU LACİVERT yapıyoruz (Bu resimde en iyi bu görünür) */
     h1, h2, h3, p, span, label, .stMarkdown p {{
-        color: #1e272e !important; 
+        color: #2c3e50 !important; 
         font-weight: 800 !important;
-        text-shadow: 1px 1px 3px rgba(255,255,255,0.7); /* Yazının okunması için beyaz gölge */
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* Yazıların arkasına hafif aydınlık */
     }}
 
-    /* Dosya yükleme alanı */
+    /* Dosya yükleme alanı açıklamaları */
     .stFileUploader label, .stFileUploader small {{
-        color: #1e272e !important;
+        color: #2c3e50 !important;
     }}
 
-    /* Giriş kutusu (Daha belirgin beyaz) */
+    /* Giriş kutusu tasarımı */
     .stTextInput input {{
         color: black !important;
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        border: 2px solid #2980b9 !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 2px solid #5d6d7e !important;
         border-radius: 10px;
     }}
 
-    /* Butonlar (Daha şık mavi tonu) */
+    /* Butonlar (Resimle uyumlu yumuşak bir ton) */
     .stButton>button {{
         color: white !important;
-        background-color: #2980b9 !important;
+        background-color: #5d6d7e !important;
         border-radius: 12px;
         font-weight: bold;
-        transition: 0.3s;
         border: none;
+        transition: 0.3s;
     }}
     
     .stButton>button:hover {{
-        background-color: #3498db !important;
-        transform: scale(1.02);
+        background-color: #2c3e50 !important;
+        transform: scale(1.03);
     }}
     
-    /* Tablo verileri net görünsün */
+    /* Tablo verileri siyah kalsın */
     .stDataFrame div {{
         color: black !important;
     }}
@@ -86,14 +86,14 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Bağlantı hatası.")
+            st.error("Çeviri sırasında bir hata oluştu.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
 st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Excel dosyasını yükle:", type=['xlsx'])
+yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel'i yükle:", type=['xlsx'])
 if yuklenen_dosya is not None:
     if st.button("Listeye Dahil Et"):
         try:
@@ -101,18 +101,21 @@ if yuklenen_dosya is not None:
             st.session_state.kelimeler = eski_df.to_dict('records')
             st.success("Liste başarıyla güncellendi!")
         except:
-            st.error("Dosya okunurken hata oluştu.")
+            st.error("Dosya okunurken bir hata oluştu.")
 
 st.divider()
 
+# Dil Değiştirme Alanı
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 col_dil1, col_dil2, col_dil3 = st.columns([2,1,2])
 with col_dil1: st.write(f"**Kaynak:** {kaynak_etiket}")
 with col_dil2: st.button("🔄 Değiştir", on_click=dil_degistir)
 with col_dil3: st.write(f"**Hedef:** {'Türkçe' if st.session_state.hedef_dil == 'tr' else 'İngilizce'}")
 
+# Kelime Giriş Alanı
 st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
 
+# Liste ve İndirme Butonları
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
     st.write("### 📚 Kaydedilen Kelimeler")
