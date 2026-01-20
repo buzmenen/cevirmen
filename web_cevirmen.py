@@ -184,7 +184,7 @@ st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_chang
 
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
-    st.write("### 📚 Kaydedilen Kelimeler")
+    st.write("### 📚 Karıcığımın Kelimeleri")
     st.table(df) 
 
     output = BytesIO()
@@ -193,9 +193,9 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
+        st.download_button("📥 Bana Tıkla ve Excel İndir Bebek", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        if st.button("🗑️ Sıfırla"):
+        if st.button("🗑️ Bana Tıkla ve Sıfırla Güzelim"):
             st.session_state.kelimeler = []
             st.rerun()
 
@@ -205,3 +205,4 @@ st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
     st.balloons() 
     st.success("Bende seni öptüm aşkım 💋😘")
+
