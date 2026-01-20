@@ -18,31 +18,50 @@ st.markdown(
         background-position: center;
     }}
     
-    /* Belirttiğin bölgelerdeki yazıları SİYAH yapıyoruz */
+    /* Genel Yazı Renkleri */
     h1, h2, h3, p, span, label, .stMarkdown p {{
-        color: #2c3e50 !important; /* Koyu Gri / Siyah tonu */
+        color: #1e272e !important; 
         font-weight: bold !important;
     }}
 
-    /* Dosya yükleme alanı açıklamaları için özel ayar */
-    .stFileUploader label, .stFileUploader small {{
-        color: #2c3e50 !important;
+    /* --- DOSYA YÜKLEME ALANI (UPLOADER) DÜZENLEME --- */
+    /* Dış kutuyu beyaz yapıyoruz */
+    [data-testid="stFileUploader"] {{
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        padding: 15px;
+        border-radius: 15px;
+        border: 2px dashed #3498db !important;
+    }}
+    
+    /* "Drag and drop file here" ve "Limit 200MB" gibi tüm iç yazıları SİYAH yapıyoruz */
+    [data-testid="stFileUploader"] section {{
+        color: black !important;
+    }}
+    
+    [data-testid="stFileUploader"] label {{
+        color: black !important;
     }}
 
-    /* Giriş kutusu ve butonların daha net görünmesi için */
+    [data-testid="stFileUploader"] small {{
+        color: #2c3e50 !important;
+        font-weight: bold !important;
+    }}
+    /* ----------------------------------------------- */
+
     .stTextInput input {{
         color: black !important;
         background-color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: bold;
     }}
 
     .stButton>button {{
-        color: white !important; /* Buton yazısı beyaz kalsın */
-        background-color: #3498db !important; /* Buton belirgin mavi olsun */
+        color: white !important;
+        background-color: #3498db !important;
         border-radius: 10px;
         border: none;
+        font-weight: bold;
     }}
     
-    /* Tablo içindeki veriler siyah kalsın ki okunsun */
     .stDataFrame div {{
         color: black !important;
     }}
@@ -81,8 +100,8 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# Dosya Yükleme Bölümü
 st.write("### 📂 Eski Listeni Güncelle")
+# Dosya yükleme alanı artık beyaz ve yazıları siyah
 yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel dosyasını buraya bırak:", type=['xlsx'])
 if yuklenen_dosya is not None:
     try:
@@ -95,7 +114,6 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
-# Dil Değiştirme
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
@@ -104,10 +122,8 @@ with col_dil1: st.write(f"**Kaynak:** {kaynak_etiket}")
 with col_dil2: st.button("🔄 Değiştir", on_click=dil_degistir)
 with col_dil3: st.write(f"**Hedef:** {hedef_etiket}")
 
-# Kelime Girişi
 st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
 
-# Liste ve Excel işlemleri
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
     st.write("### 📚 Kaydedilen Kelimeler")
@@ -124,4 +140,3 @@ if st.session_state.kelimeler:
         if st.button("🗑️ Listeyi Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
-
