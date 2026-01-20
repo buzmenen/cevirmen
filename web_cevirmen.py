@@ -18,14 +18,15 @@ st.markdown(
         background-position: center;
     }}
     
-    /* ANA BAŞLIK ÖZEL AYARI - Arkasına kutu koymadan parlatma */
+    /* ANA BAŞLIK - Beyaz parlama efektiyle net okuma */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
                      -2px -2px 10px rgba(255, 255, 255, 1),
-                     0px 0px 15px rgba(255, 255, 255, 0.8) !important;
+                     0px 0px 20px rgba(255, 255, 255, 0.8) !important;
         font-weight: 900 !important;
         text-align: center !important;
+        padding-bottom: 10px;
     }}
 
     /* Genel Yazı Renkleri */
@@ -35,21 +36,26 @@ st.markdown(
     }}
 
     /* --- PANELLER (CAM EFEKTİ) --- */
-    /* 5. sıradaki div açıklama metnini, diğerleri girdi alanlarını kapsar */
-    [data-testid="stVerticalBlock"] > div:nth-child(5),
-    [data-testid="stVerticalBlock"] > div:nth-child(6), 
-    [data-testid="stVerticalBlock"] > div:nth-child(7),
-    [data-testid="stVerticalBlock"] > div:nth-child(8),
-    [data-testid="stVerticalBlock"] > div:nth-child(10) {{
+    /* Sıralamayı düzelttim: Boş kutuları değil, sadece içeriği olanları boyar */
+    .stMarkdown div[data-testid="stMarkdownContainer"] p {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
         border-radius: 20px;
-        margin-bottom: 10px;
         backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    /* --- DOSYA YÜKLEME ALANI --- */
+    /* Kaynak/Hedef ve Giriş alanını kapsayan bloklar */
+    [data-testid="stHorizontalBlock"], .stTextInput {{
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }}
+
+    /* --- DOSYA YÜKLEME ALANI (TAM BEYAZ) --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -62,40 +68,21 @@ st.markdown(
         color: black !important;
     }}
 
-    [data-testid="stFileUploaderDropzoneInstructions"] div, 
-    [data-testid="stFileUploaderDropzoneInstructions"] span,
-    [data-testid="stFileUploaderDropzoneInstructions"] small {{
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
 
-    [data-testid="stFileUploader"] button {{
-        color: white !important;
-        background-color: #2c3e50 !important;
-        border: none !important;
-    }}
-
-    /* --- TABLO (LİSTE) TAM BEYAZ --- */
+    /* --- TABLO (LİSTE) BEYAZ VE SİYAH YAZILI --- */
     [data-testid="stTable"] {{
         background-color: white !important;
         border-radius: 15px !important;
         border: 1px solid #ddd !important;
+        color: black !important;
     }}
 
-    [data-testid="stTable"] td {{
+    [data-testid="stTable"] td, [data-testid="stTable"] th {{
         background-color: white !important;
         color: black !important;
-    }}
-
-    [data-testid="stTable"] th {{
-        background-color: #f8f9fa !important;
-        color: black !important;
-    }}
-
-    /* --- GİRİŞ KUTUSU --- */
-    .stTextInput input {{
-        color: black !important;
-        background-color: white !important;
-        font-weight: bold;
     }}
 
     /* --- BUTONLAR --- */
@@ -135,14 +122,14 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Çeviri hatası.")
+            st.error("Bağlantı hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# --- AÇIKLAMA ALANI ---
-st.markdown("""
+# AÇIKLAMA METNİ
+st.info("""
 Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
 
 Ama unutma eğer yazdığın kelimenin karşılığı olmazsa tabloya aynen o kelime tekrar yazılır. Lütfen buna dikkat et. 
