@@ -24,7 +24,36 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- PANELLER --- */
+    /* --- DOSYA YÜKLEME ALANI (KESİN ÇÖZÜM) --- */
+    /* Dış çerçeveyi beyaz yapar */
+    [data-testid="stFileUploader"] {{
+        background-color: white !important;
+        padding: 10px;
+        border-radius: 15px;
+        border: 2px dashed #3498db !important;
+    }}
+
+    /* İnatçı siyah iç kutuyu (dropzone) beyaz yapar */
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important;
+        color: black !important;
+    }}
+
+    /* İçerideki tüm yazıları (Drag and drop, Limit vb.) siyah yapar */
+    [data-testid="stFileUploaderDropzoneInstructions"] div, 
+    [data-testid="stFileUploaderDropzoneInstructions"] span,
+    [data-testid="stFileUploaderDropzoneInstructions"] small {{
+        color: black !important;
+    }}
+
+    /* "Browse files" butonunu düzenler */
+    [data-testid="stFileUploader"] button {{
+        color: white !important;
+        background-color: #2c3e50 !important;
+        border: none !important;
+    }}
+
+    /* --- PANELLER (CAM EFEKTİ) --- */
     [data-testid="stVerticalBlock"] > div:nth-child(6), 
     [data-testid="stVerticalBlock"] > div:nth-child(7),
     [data-testid="stVerticalBlock"] > div:nth-child(8),
@@ -38,38 +67,27 @@ st.markdown(
     }}
 
     /* --- TABLO (LİSTE) TAM BEYAZ YAPMA --- */
-    /* Tabloyu kapsayan ana alanı bembeyaz yapar */
     [data-testid="stTable"] {{
         background-color: white !important;
         border-radius: 15px !important;
-        overflow: hidden !important;
         border: 1px solid #ddd !important;
     }}
 
-    /* Tablo içindeki hücre yazıları SİYAH */
     [data-testid="stTable"] td {{
         background-color: white !important;
         color: black !important;
-        font-weight: 500 !important;
     }}
 
-    /* Tablo BAŞLIKLARI (İngilizce - Türkçe yazan yer) */
     [data-testid="stTable"] th {{
-        background-color: #f1f2f6 !important;
+        background-color: #f8f9fa !important;
         color: black !important;
-        font-weight: bold !important;
     }}
 
-    /* --- GİRİŞ KUTUSU VE DOSYA YÜKLEYİCİ --- */
+    /* --- GİRİŞ KUTUSU --- */
     .stTextInput input {{
         color: black !important;
         background-color: white !important;
         font-weight: bold;
-    }}
-    
-    [data-testid="stFileUploader"] {{
-        background-color: white !important;
-        border-radius: 15px;
     }}
 
     /* --- BUTONLAR --- */
@@ -141,7 +159,6 @@ st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_chang
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
     st.write("### 📚 Kaydedilen Kelimeler")
-    # BURADA st.table KULLANDIK (Kesin Beyaz Olması İçin)
     st.table(df) 
 
     output = BytesIO()
