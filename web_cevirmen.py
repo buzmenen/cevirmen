@@ -50,7 +50,7 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* DOSYA YÜKLEME ALANI BEYAZLATMA */
+    /* --- DOSYA YÜKLEME ALANI VE YÜKLENEN DOSYA YAZISI DÜZELTME --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -58,16 +58,31 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    [data-testid="stFileUploaderDropzone"] {{
-        background-color: white !important;
+    /* Sürükleme alanı içindeki yazılar */
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
 
+    /* !!! YÜKLENEN DOSYA İSMİ VE DETAYLARI !!! */
+    [data-testid="stFileUploaderFileData"] {{
+        background-color: #f1f2f6 !important;
+        border-radius: 10px;
+        padding: 5px;
+    }}
+    
+    [data-testid="stFileUploaderFileData"] div, 
+    [data-testid="stFileUploaderFileData"] span,
+    [data-testid="stFileUploaderFileName"] {{
+        color: black !important;
+        font-weight: bold !important;
+    }}
+
+    /* Dosya yükleme içindeki buton (Browse Files) */
     [data-testid="stFileUploader"] button {{
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
         font-weight: bold !important;
-        transition: all 0.3s ease; /* Yumuşak geçiş için */
+        transition: all 0.3s ease;
     }}
     
     [data-testid="stFileUploader"] button:hover {{
@@ -80,33 +95,25 @@ st.markdown(
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
-    /* --- PARLAYAN BUTON EFEKTLERİ --- */
+    /* BUTON EFEKTLERİ */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
         border: none;
-        transition: all 0.3s ease !important; /* Efektin hızı */
+        transition: all 0.3s ease !important;
     }}
 
-    /* Fare üzerine gelince (Hover) */
     .stButton>button:hover, .stDownloadButton>button:hover {{
-        background-color: #2980b9 !important; /* Rengi biraz koyulaşır */
-        transform: translateY(-3px) scale(1.02); /* Hafif yukarı kalkar ve büyür */
-        box-shadow: 0px 10px 20px rgba(52, 152, 219, 0.6) !important; /* Parlama efekti */
+        background-color: #2980b9 !important;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0px 10px 20px rgba(52, 152, 219, 0.6) !important;
         cursor: pointer;
     }}
 
-    /* Butona basılınca (Active) */
     .stButton>button:active, .stDownloadButton>button:active {{
         transform: translateY(1px);
-        box-shadow: 0px 5px 10px rgba(52, 152, 219, 0.4) !important;
-    }}
-    
-    /* Öpücük Butonuna Özel Pembe Parlama */
-    div.stButton > button:first-child:contains("💋") {{
-       /* Bu kısım özel seçici gerektirebilir, aşağıda butonun kendisine direkt ekledik */
     }}
     </style>
     """,
@@ -171,7 +178,6 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
-# Kelime Çeviri Bölümü
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
@@ -205,5 +211,3 @@ st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
     st.balloons() 
     st.success("Bende seni öptüm aşkım 💋😘")
-
-
