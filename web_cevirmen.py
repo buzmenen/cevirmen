@@ -24,51 +24,56 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI (TAM DÜZENLEME) --- */
-    /* 1. Dış Çerçeve */
+    /* --- YAZI ARKALARINA ŞEFFAF KUTUCUK (YENİ) --- */
+    /* Kaynak/Hedef ve Giriş alanını kapsayan orta bölüm */
+    [data-testid="stVerticalBlock"] > div:nth-child(6), 
+    [data-testid="stVerticalBlock"] > div:nth-child(7),
+    [data-testid="stVerticalBlock"] > div:nth-child(8) {{
+        background-color: rgba(255, 255, 255, 0.7); /* Hafif saydam beyaz */
+        padding: 15px 25px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+        backdrop-filter: blur(5px); /* Arkadaki resmi hafif flulaştırır, yazıyı öne çıkarır */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }}
+
+    /* --- DOSYA YÜKLEME ALANI --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
         border-radius: 15px;
-    }}
-
-    /* 2. İçteki Siyah Kutuyu Beyaz Yapma */
-    [data-testid="stFileUploader"] section {{
-        background-color: white !important;
-        color: black !important;
         border: 2px dashed #3498db !important;
     }}
 
-    /* 3. "Drag and drop" ve "Limit" yazılarını siyah yapma */
+    [data-testid="stFileUploader"] section {{
+        background-color: white !important;
+        color: black !important;
+    }}
+
     [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
     
-    /* 4. "Browse files" butonunu düzenleme */
     [data-testid="stFileUploader"] button {{
         color: white !important;
         background-color: #2c3e50 !important;
-        border: 1px solid black !important;
     }}
 
-    /* 5. Yüklenen dosya bilgisini siyah yapma */
-    [data-testid="stFileUploaderFileName"] {{
-        color: black !important;
-    }}
-    /* ----------------------------------------------- */
-
+    /* --- GİRİŞ KUTUSU --- */
     .stTextInput input {{
         color: black !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        background-color: white !important;
         font-weight: bold;
+        border: 1px solid #dcdde1;
     }}
 
+    /* --- BUTONLAR --- */
     .stButton>button {{
         color: white !important;
         background-color: #3498db !important;
-        border-radius: 10px;
-        border: none;
+        border-radius: 12px;
         font-weight: bold;
+        border: none;
     }}
     
     .stDataFrame div {{
@@ -109,7 +114,7 @@ def kelime_ekle():
 st.title("📝 Karıcığımın Dil Asistanı")
 
 st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel dosyasını buraya bırak:", type=['xlsx'])
+yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak:", type=['xlsx'])
 if yuklenen_dosya is not None:
     try:
         eski_df = pd.read_excel(yuklenen_dosya)
@@ -117,7 +122,7 @@ if yuklenen_dosya is not None:
             st.session_state.kelimeler = eski_df.to_dict('records')
             st.success("Eski liste yüklendi!")
     except:
-        st.error("Excel dosyası okunamadı.")
+        st.error("Excel okunamadı.")
 
 st.divider()
 
@@ -142,8 +147,8 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📥 Excel Olarak İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
+        st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        if st.button("🗑️ Listeyi Sıfırla"):
+        if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
