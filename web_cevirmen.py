@@ -3,7 +3,7 @@ import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
 
-st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
+st.set_page_config(page_title="Dil Asistanım", page_icon="📝", layout="wide") # Layout wide yaparak alanı genişlettik
 
 # --- TASARIM VE ARKA PLAN ---
 arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
@@ -11,21 +11,28 @@ arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 st.markdown(
     f"""
     <style>
+    /* Arka Plan */
     .stApp {{
         background-image: url("{arka_plan_resmi}");
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
     }}
+
+    /* TÜM İÇERİĞİ SOLA YASLAMA */
+    .block-container {{
+        margin-left: 0 !important;
+        padding-left: 2rem !important;
+        max-width: 800px !important; /* Çok yayılmaması için genişliği sınırladık */
+    }}
     
-    /* ANA BAŞLIK - Beyaz parlama efektiyle net okuma */
+    /* ANA BAŞLIK - Sola Yaslı ve Belirgin */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
-                     -2px -2px 10px rgba(255, 255, 255, 1),
-                     0px 0px 20px rgba(255, 255, 255, 0.8) !important;
+                     -2px -2px 10px rgba(255, 255, 255, 1) !important;
         font-weight: 900 !important;
-        text-align: center !important;
+        text-align: left !important; /* Sola yasladık */
         padding-bottom: 10px;
     }}
 
@@ -33,29 +40,20 @@ st.markdown(
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
+        text-align: left !important;
     }}
 
     /* --- PANELLER (CAM EFEKTİ) --- */
-    /* Sıralamayı düzelttim: Boş kutuları değil, sadece içeriği olanları boyar */
-    .stMarkdown div[data-testid="stMarkdownContainer"] p {{
-        background-color: rgba(255, 255, 255, 0.7);
+    .stAlert, [data-testid="stHorizontalBlock"], .stTextInput {{
+        background-color: rgba(255, 255, 255, 0.7) !important;
         padding: 15px 25px;
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }}
-
-    /* Kaynak/Hedef ve Giriş alanını kapsayan bloklar */
-    [data-testid="stHorizontalBlock"], .stTextInput {{
-        background-color: rgba(255, 255, 255, 0.7);
-        padding: 10px 20px;
         border-radius: 20px;
         backdrop-filter: blur(5px);
         margin-bottom: 15px;
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    /* --- DOSYA YÜKLEME ALANI (TAM BEYAZ) --- */
+    /* --- DOSYA YÜKLEME ALANI --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -65,11 +63,6 @@ st.markdown(
 
     [data-testid="stFileUploaderDropzone"] {{
         background-color: white !important;
-        color: black !important;
-    }}
-
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
-        color: black !important;
     }}
 
     /* --- TABLO (LİSTE) BEYAZ VE SİYAH YAZILI --- */
@@ -77,7 +70,6 @@ st.markdown(
         background-color: white !important;
         border-radius: 15px !important;
         border: 1px solid #ddd !important;
-        color: black !important;
     }}
 
     [data-testid="stTable"] td, [data-testid="stTable"] th {{
@@ -92,7 +84,6 @@ st.markdown(
         border-radius: 12px;
         font-weight: bold;
         border: none;
-        width: 100%;
     }}
     </style>
     """,
@@ -128,7 +119,6 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# AÇIKLAMA METNİ
 st.info("""
 Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
 
