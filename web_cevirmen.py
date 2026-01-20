@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
-import time  # Mesajları bekletip silmek için
+import time
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
@@ -21,9 +21,7 @@ st.markdown(
     
     h1 {{
         color: #1e272e !important;
-        text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
-                     -2px -2px 10px rgba(255, 255, 255, 1),
-                     0px 0px 20px rgba(255, 255, 255, 0.8) !important;
+        text-shadow: 2px 2px 10px rgba(255, 255, 255, 1) !important;
         font-weight: 900 !important;
         text-align: center !important;
     }}
@@ -33,33 +31,56 @@ st.markdown(
         font-weight: bold !important;
     }}
 
+    /* --- DOSYA YÜKLEME ALANI TAM DÜZELTME --- */
+    [data-testid="stFileUploader"] {{
+        background-color: white !important;
+        padding: 15px !important;
+        border-radius: 15px !important;
+        border: 2px dashed #3498db !important;
+    }}
+
+    /* Sürükleme alanı içindeki genel yazılar */
+    [data-testid="stFileUploaderDropzoneInstructions"] div,
+    [data-testid="stFileUploaderDropzoneInstructions"] span {{
+        color: black !important;
+        font-weight: bold !important;
+    }}
+
+    /* BROWSE FILES BUTONU VE İÇİNDEKİ YAZI */
+    [data-testid="stFileUploader"] button {{
+        background-color: #f1f2f6 !important;
+        border: 1px solid #ccc !important;
+        color: black !important; /* Yazı rengini siyah yap */
+    }}
+    
+    /* Butonun içindeki metne direkt müdahale */
+    [data-testid="stFileUploader"] button div p {{
+        color: black !important;
+        font-weight: bold !important;
+    }}
+
+    /* YÜKLENEN DOSYA İSMİ VE DETAYLAR */
+    [data-testid="stFileUploaderFileData"] div, 
+    [data-testid="stFileUploaderFileData"] span,
+    [data-testid="stFileUploaderFileName"],
+    .st-emotion-cache-1erivf3 {{ 
+        color: black !important;
+        font-weight: bold !important;
+    }}
+
+    /* Dosya silme (X) butonu rengi */
+    [data-testid="stFileUploaderFileData"] button {{
+        color: black !important;
+    }}
+
+    /* Giriş kutusu (Input) siyahlığı engelleme */
     .stTextInput input {{
         color: black !important;
         background-color: white !important;
         font-weight: bold !important;
-        border-radius: 10px !important;
     }}
 
-    /* DOSYA YÜKLEME ALANI */
-    [data-testid="stFileUploader"] {{
-        background-color: white !important;
-        padding: 15px;
-        border-radius: 15px;
-        border: 2px dashed #3498db !important;
-    }}
-
-    [data-testid="stFileUploaderDropzone"] {{
-        background-color: white !important;
-        color: black !important;
-    }}
-
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
-        color: black !important;
-    }}
-
-    [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
-    [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
-    
+    /* --- BUTONLAR --- */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
@@ -110,7 +131,6 @@ st.title("📝 Karıcığımın Dil Asistanı")
 
 st.info("Seni seviyorum karıcığım, iyi çalışmalar! <3")
 
-# --- MÜZİK KUTUSU ---
 st.write("### 🎬 Müzik Kutusu")
 video_linki = st.text_input("Şarkı linkini buraya at atgum:", placeholder="https://www.youtube.com/watch?v=...")
 st.video(video_linki if video_linki else "https://www.youtube.com/watch?v=7qaHdHpSjX8")
@@ -118,12 +138,10 @@ st.video(video_linki if video_linki else "https://www.youtube.com/watch?v=7qaHdH
 st.write("### 📂 Eski Listeni Güncelleyebilirsin Bebeğim")
 yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak ben alırım atgum:", type=['xlsx'])
 
-# Geçici mesaj alanı (Dosya için)
 dosya_mesaj_alani = st.empty()
 
 if yuklenen_dosya is not None:
     if st.button("Listeye Dahil Et"):
-        # Dosya zaten yüklendi mi kontrolü
         if st.session_state.yuklenen_dosya_adi == yuklenen_dosya.name:
             dosya_mesaj_alani.warning("Karıcığımmm zaten dahil ettin bunu 🤭")
             time.sleep(4)
@@ -143,7 +161,6 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
-# Kelime Giriş Alanı
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
@@ -172,13 +189,12 @@ if st.session_state.kelimeler:
             st.session_state.yuklenen_dosya_adi = None
             st.rerun()
 
-# --- ÖPÜCÜK KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
-opucuk_mesaj_alani = st.empty() # Öpücük mesajı için boş alan
+opucuk_mesaj_alani = st.empty()
 
 if st.button("💋 Beni Öp"):
     st.balloons()
     opucuk_mesaj_alani.success("Bende seni öptüm aşkım 💋😘")
-    time.sleep(5) # 5 saniye bekle
-    opucuk_mesaj_alani.empty() # Mesajı sil
+    time.sleep(5)
+    opucuk_mesaj_alani.empty()
