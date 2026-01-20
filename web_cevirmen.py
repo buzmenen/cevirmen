@@ -158,16 +158,16 @@ if video_linki:
 else:
     st.video("https://www.youtube.com/watch?v=7qaHdHpSjX8")
 
-st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak:", type=['xlsx'])
+st.write("### 📂 Eski Listeni Güncelleyebilirsin Bebeğim")
+yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak ben alırım atgum:", type=['xlsx'])
 if yuklenen_dosya is not None:
     try:
         eski_df = pd.read_excel(yuklenen_dosya)
         if st.button("Listeye Dahil Et"):
             st.session_state.kelimeler = eski_df.to_dict('records')
-            st.success("Eski liste yüklendi!")
+            st.success("Eski liste yüklendi aferin karıcığım!")
     except:
-        st.error("Excel okunamadı.")
+        st.error("Excel okunamadı atgum.")
 
 st.divider()
 
@@ -205,4 +205,5 @@ st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
     st.balloons() 
     st.success("Bende seni öptüm aşkım 💋😘")
+
 
