@@ -50,52 +50,61 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI VE YÜKLENEN DOSYA YAZISI DÜZELTME --- */
+    /* --- DOSYA YÜKLEME ALANI KÖKTEN ÇÖZÜM --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
-        padding: 10px;
+        padding: 15px;
         border-radius: 15px;
         border: 2px dashed #3498db !important;
     }}
 
-    /* Sürükleme alanı içindeki yazılar */
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
+    /* Sürükleme alanının içini ve arka planını zorla beyaz yapıyoruz */
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important;
         color: black !important;
+        border: none !important;
     }}
 
-    /* !!! YÜKLENEN DOSYA İSMİ VE DETAYLARI !!! */
-    [data-testid="stFileUploaderFileData"] {{
-        background-color: #f1f2f6 !important;
-        border-radius: 10px;
-        padding: 5px;
-    }}
-    
-    [data-testid="stFileUploaderFileData"] div, 
-    [data-testid="stFileUploaderFileData"] span,
-    [data-testid="stFileUploaderFileName"] {{
+    /* 'Drag and drop' ve tüm iç yazıları siyah yapıyoruz */
+    [data-testid="stFileUploaderDropzoneInstructions"] div, 
+    [data-testid="stFileUploaderDropzoneInstructions"] span, 
+    [data-testid="stFileUploaderDropzoneInstructions"] small {{
         color: black !important;
         font-weight: bold !important;
     }}
 
-    /* Dosya yükleme içindeki buton (Browse Files) */
+    /* Yüklenen dosya bilgisini içeren kutu */
+    [data-testid="stFileUploaderFileData"] {{
+        background-color: #f8f9fa !important;
+        border: 1px solid #eee !important;
+        border-radius: 10px;
+        color: black !important;
+    }}
+    
+    /* Dosya adı yazısı */
+    [data-testid="stFileUploaderFileName"] {{
+        color: black !important;
+    }}
+
+    /* Browse Files butonu */
     [data-testid="stFileUploader"] button {{
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
         font-weight: bold !important;
+        border: 1px solid #ccc !important;
         transition: all 0.3s ease;
     }}
     
     [data-testid="stFileUploader"] button:hover {{
         background-color: #ffffff !important;
-        transform: scale(1.05);
-        box-shadow: 0px 0px 15px rgba(52, 152, 219, 0.5);
+        transform: scale(1.02);
+        box-shadow: 0px 0px 10px rgba(52, 152, 219, 0.3);
     }}
 
-    /* TABLO */
+    /* TABLO VE DİĞERLERİ */
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
-    /* BUTON EFEKTLERİ */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
@@ -109,11 +118,6 @@ st.markdown(
         background-color: #2980b9 !important;
         transform: translateY(-3px) scale(1.02);
         box-shadow: 0px 10px 20px rgba(52, 152, 219, 0.6) !important;
-        cursor: pointer;
-    }}
-
-    .stButton>button:active, .stDownloadButton>button:active {{
-        transform: translateY(1px);
     }}
     </style>
     """,
@@ -155,7 +159,6 @@ Merhaba karıcığım bu senin için yaptığım dil asistanın. İstediğin kel
 Seni seviyorum <3
 """)
 
-# --- MÜZİK KUTUSU ---
 st.write("### 🎬 Müzik Kutusu")
 video_linki = st.text_input("Dinlemek istediğin YouTube linkini buraya yapıştır:", 
                             placeholder="https://www.youtube.com/watch?v=...")
@@ -205,7 +208,6 @@ if st.session_state.kelimeler:
             st.session_state.kelimeler = []
             st.rerun()
 
-# --- ÖPÜCÜK KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
