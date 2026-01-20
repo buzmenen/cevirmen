@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
@@ -18,7 +19,6 @@ st.markdown(
         background-position: center;
     }}
     
-    /* ANA BAŞLIK */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
@@ -29,13 +29,11 @@ st.markdown(
         padding-bottom: 10px;
     }}
 
-    /* Genel Yazı Renkleri */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
     }}
 
-    /* PANELLER VE GİRİŞ KUTUSU */
     .stMarkdown div[data-testid="stMarkdownContainer"] p, .stAlert {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
@@ -51,7 +49,6 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* DOSYA YÜKLEME VE BROWSE BUTTON */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -65,7 +62,6 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* TABLO VE BUTONLAR */
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
@@ -74,17 +70,6 @@ st.markdown(
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
-    }}
-
-    /* Öpücük Kutusu Özel Stili */
-    .opucuk-kutusu {{
-        background-color: rgba(255, 182, 193, 0.8) !important;
-        border: 2px solid #ff4d6d !important;
-        color: #ff4d6d !important;
-        text-align: center;
-        padding: 10px;
-        border-radius: 15px;
-        margin-top: 30px;
     }}
     </style>
     """,
@@ -120,13 +105,8 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# AÇIKLAMA METNİ
 st.info("""
-Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
-
-Ama unutma eğer yazdığın kelimenin karşılığı olmazsa tabloya aynen o kelime tekrar yazılır. Lütfen buna dikkat et. 
-
-Seni seviyorum, iyi çalışmalar <3
+Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. <3
 """)
 
 st.write("### 📂 Eski Listeni Güncelle")
@@ -169,9 +149,39 @@ if st.session_state.kelimeler:
             st.session_state.kelimeler = []
             st.rerun()
 
-# --- ÖPÜCÜK KUTUSU (SAYFANIN EN ALTI) ---
+# --- ÖPÜCÜK VE KALP KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
+
 if st.button("💋 Beni Öp"):
-    st.balloons() # Ekranda balonlar uçar
+    # Kalp yağmuru için JavaScript kodu
+    components.html(
+        """
+        <div id="hearts-container" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;"></div>
+        <script>
+            function createHeart() {{
+                const heart = document.createElement("div");
+                heart.innerHTML = "❤️";
+                heart.style.position = "fixed";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.top = "100vh";
+                heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+                heart.style.transition = "transform 3s linear, opacity 3s linear";
+                heart.style.opacity = "1";
+                document.getElementById("hearts-container").appendChild(heart);
+                
+                setTimeout(() => {{
+                    heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                    heart.style.opacity = "0";
+                }}, 100);
+                
+                setTimeout(() => heart.remove(), 4000);
+            }}
+            for(let i=0; i<30; i++) {{
+                setTimeout(createHeart, i * 100);
+            }}
+        </script>
+        """,
+        height=0
+    )
     st.success("Bende seni öptüm aşkım 💋😘")
