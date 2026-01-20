@@ -24,14 +24,16 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- TÜM PANELLERİ ŞEFFAF BEYAZ YAPMA (Liste ve Butonlar Dahil) --- */
-    /* Orta bölümdeki tüm ana blokları hedefler */
-    [data-testid="stVerticalBlock"] > div {{
-        background-color: rgba(255, 255, 255, 0.65); /* Hafif saydam beyaz */
-        padding: 10px 20px;
+    /* --- YAZI ARKALARINA ŞEFFAF KUTUCUK (YENİ) --- */
+    /* Kaynak/Hedef ve Giriş alanını kapsayan orta bölüm */
+    [data-testid="stVerticalBlock"] > div:nth-child(6), 
+    [data-testid="stVerticalBlock"] > div:nth-child(7),
+    [data-testid="stVerticalBlock"] > div:nth-child(8) {{
+        background-color: rgba(255, 255, 255, 0.7); /* Hafif saydam beyaz */
+        padding: 15px 25px;
         border-radius: 20px;
         margin-bottom: 10px;
-        backdrop-filter: blur(8px); /* Cam efekti */
+        backdrop-filter: blur(5px); /* Arkadaki resmi hafif flulaştırır, yazıyı öne çıkarır */
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
@@ -40,6 +42,7 @@ st.markdown(
         background-color: white !important;
         padding: 10px;
         border-radius: 15px;
+        border: 2px dashed #3498db !important;
     }}
 
     [data-testid="stFileUploader"] section {{
@@ -61,35 +64,21 @@ st.markdown(
         color: black !important;
         background-color: white !important;
         font-weight: bold;
+        border: 1px solid #dcdde1;
     }}
 
-    /* --- TABLO (LİSTE) DÜZENLEME --- */
-    /* Tablonun siyah kalmasını engellemek için */
-    [data-testid="stDataFrame"] {{
-        background-color: white !important;
-        border-radius: 10px;
-    }}
-    
-    /* Tablo içindeki yazıların siyah olması */
-    [data-testid="stTable"] td, [data-testid="stTable"] th {{
-        color: black !important;
-    }}
-
-    /* --- BUTONLARIN HEPSİNİ MAVİ YAPMA --- */
-    .stButton>button, .stDownloadButton>button {{
+    /* --- BUTONLAR --- */
+    .stButton>button {{
         color: white !important;
         background-color: #3498db !important;
-        border-radius: 12px !important;
-        font-weight: bold !important;
-        border: none !important;
-        width: 100%;
-        padding: 10px;
-    }}
-
-    .stButton>button:hover, .stDownloadButton>button:hover {{
-        background-color: #2980b9 !important;
+        border-radius: 12px;
+        font-weight: bold;
+        border: none;
     }}
     
+    .stDataFrame div {{
+        color: black !important;
+    }}
     </style>
     """,
     unsafe_allow_html=True
@@ -158,10 +147,9 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        # İndirme butonu artık mavi
         st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        # Sıfırla butonu da mavi
         if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
+
