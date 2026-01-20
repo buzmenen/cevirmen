@@ -3,8 +3,7 @@ import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
 
-# Sayfa genişliğini en baştan "wide" yapıyoruz
-st.set_page_config(page_title="Dil Asistanım", page_icon="📝", layout="wide")
+st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
 # --- TASARIM VE ARKA PLAN ---
 arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
@@ -12,62 +11,51 @@ arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 st.markdown(
     f"""
     <style>
-    /* 1. ARKA PLAN AYARI */
     .stApp {{
         background-image: url("{arka_plan_resmi}");
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
     }}
-
-    /* 2. TÜM İÇERİĞİ SOLA YASLAMA (KESİN ÇÖZÜM) */
-    /* Streamlit'in ana kapsayıcısını sola çeker */
-    [data-testid="stAppViewBlockContainer"] {{
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        margin-left: 0px !important;
-        margin-right: auto !important;
-        max-width: 850px !important; /* Ekranın sonuna kadar uzayıp çirkin durmasın diye */
-    }}
-
-    /* Alt katmanları da sola yaslamaya zorlar */
-    .main .block-container {{
-        max-width: 850px !important;
-        padding-left: 2rem !important;
-        margin-left: 0 !important;
-    }}
-
-    /* 3. ANA BAŞLIK AYARI */
+    
+    /* ANA BAŞLIK - Beyaz parlama efektiyle net okuma */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
-                     -2px -2px 10px rgba(255, 255, 255, 1) !important;
+                     -2px -2px 10px rgba(255, 255, 255, 1),
+                     0px 0px 20px rgba(255, 255, 255, 0.8) !important;
         font-weight: 900 !important;
-        text-align: left !important;
-        margin-left: 0 !important;
+        text-align: center !important;
+        padding-bottom: 10px;
     }}
 
-    /* 4. GENEL YAZILAR VE PANELLER */
+    /* Genel Yazı Renkleri */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
-        text-align: left !important;
     }}
 
-    /* Cam efekti panelleri */
-    .stAlert, [data-testid="stHorizontalBlock"], .stTextInput {{
-        background-color: rgba(255, 255, 255, 0.7) !important;
+    /* --- PANELLER (CAM EFEKTİ) --- */
+    /* Sıralamayı düzelttim: Boş kutuları değil, sadece içeriği olanları boyar */
+    .stMarkdown div[data-testid="stMarkdownContainer"] p {{
+        background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }}
+
+    /* Kaynak/Hedef ve Giriş alanını kapsayan bloklar */
+    [data-testid="stHorizontalBlock"], .stTextInput {{
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 10px 20px;
         border-radius: 20px;
         backdrop-filter: blur(5px);
         margin-bottom: 15px;
         border: 1px solid rgba(255, 255, 255, 0.3);
-        width: 100% !important;
     }}
 
-    /* 5. DOSYA YÜKLEME VE TABLO */
+    /* --- DOSYA YÜKLEME ALANI (TAM BEYAZ) --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -75,10 +63,21 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important;
+        color: black !important;
+    }}
+
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
+        color: black !important;
+    }}
+
+    /* --- TABLO (LİSTE) BEYAZ VE SİYAH YAZILI --- */
     [data-testid="stTable"] {{
         background-color: white !important;
         border-radius: 15px !important;
         border: 1px solid #ddd !important;
+        color: black !important;
     }}
 
     [data-testid="stTable"] td, [data-testid="stTable"] th {{
@@ -86,13 +85,14 @@ st.markdown(
         color: black !important;
     }}
 
-    /* 6. BUTONLAR */
+    /* --- BUTONLAR --- */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
         border: none;
+        width: 100%;
     }}
     </style>
     """,
@@ -128,6 +128,7 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
+# AÇIKLAMA METNİ
 st.info("""
 Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
 
@@ -175,3 +176,4 @@ if st.session_state.kelimeler:
         if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
+
