@@ -51,7 +51,7 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* DOSYA YÜKLEME VE BROWSE BUTTON */
+    /* --- DOSYA YÜKLEME ALANI TAM DÜZELTME --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -59,10 +59,24 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
+    /* Siyahlığı gideren ve iç alanı beyaz yapan kısım */
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important;
+        color: black !important;
+        border: none !important;
+    }}
+
+    /* Browse Files butonu */
     [data-testid="stFileUploader"] button {{
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
         font-weight: bold !important;
+        border: 1px solid #ccc !important;
+    }}
+
+    /* Sürükleme talimatı yazısı */
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
+        color: black !important;
     }}
 
     /* TABLO VE BUTONLAR */
@@ -120,7 +134,6 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# AÇIKLAMA METNİ
 st.info("""
 Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
 
@@ -173,5 +186,5 @@ if st.session_state.kelimeler:
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
-    st.balloons() # Ekranda balonlar uçar
+    st.balloons() 
     st.success("Bende seni öptüm aşkım 💋😘")
