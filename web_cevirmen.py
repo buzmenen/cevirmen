@@ -24,36 +24,9 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI (KESİN ÇÖZÜM) --- */
-    /* Dış çerçeveyi beyaz yapar */
-    [data-testid="stFileUploader"] {{
-        background-color: white !important;
-        padding: 10px;
-        border-radius: 15px;
-        border: 2px dashed #3498db !important;
-    }}
-
-    /* İnatçı siyah iç kutuyu (dropzone) beyaz yapar */
-    [data-testid="stFileUploaderDropzone"] {{
-        background-color: white !important;
-        color: black !important;
-    }}
-
-    /* İçerideki tüm yazıları (Drag and drop, Limit vb.) siyah yapar */
-    [data-testid="stFileUploaderDropzoneInstructions"] div, 
-    [data-testid="stFileUploaderDropzoneInstructions"] span,
-    [data-testid="stFileUploaderDropzoneInstructions"] small {{
-        color: black !important;
-    }}
-
-    /* "Browse files" butonunu düzenler */
-    [data-testid="stFileUploader"] button {{
-        color: white !important;
-        background-color: #2c3e50 !important;
-        border: none !important;
-    }}
-
-    /* --- PANELLER (CAM EFEKTİ) --- */
+    /* --- AÇIKLAMA VE DİĞER PANELLER (CAM EFEKTİ) --- */
+    /* 5. sıradaki div artık senin açıklama metnin */
+    [data-testid="stVerticalBlock"] > div:nth-child(5),
     [data-testid="stVerticalBlock"] > div:nth-child(6), 
     [data-testid="stVerticalBlock"] > div:nth-child(7),
     [data-testid="stVerticalBlock"] > div:nth-child(8),
@@ -64,6 +37,31 @@ st.markdown(
         margin-bottom: 10px;
         backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
+    }}
+
+    /* --- DOSYA YÜKLEME ALANI (TAM BEYAZ) --- */
+    [data-testid="stFileUploader"] {{
+        background-color: white !important;
+        padding: 10px;
+        border-radius: 15px;
+        border: 2px dashed #3498db !important;
+    }}
+
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important;
+        color: black !important;
+    }}
+
+    [data-testid="stFileUploaderDropzoneInstructions"] div, 
+    [data-testid="stFileUploaderDropzoneInstructions"] span,
+    [data-testid="stFileUploaderDropzoneInstructions"] small {{
+        color: black !important;
+    }}
+
+    [data-testid="stFileUploader"] button {{
+        color: white !important;
+        background-color: #2c3e50 !important;
+        border: none !important;
     }}
 
     /* --- TABLO (LİSTE) TAM BEYAZ YAPMA --- */
@@ -132,6 +130,15 @@ def kelime_ekle():
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
+
+# --- YENİ AÇIKLAMA ALANI ---
+st.markdown("""
+Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
+
+Ama unutma eğer yazdığın kelimenin karşılığı olmazsa tabloya aynen o kelime tekrar yazılır. Lütfen buna dikkat et. 
+
+Seni seviyorum, iyi çalışmalar <3
+""")
 
 st.write("### 📂 Eski Listeni Güncelle")
 yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak:", type=['xlsx'])
