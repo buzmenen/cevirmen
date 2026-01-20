@@ -24,16 +24,17 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- YAZI ARKALARINA ŞEFFAF KUTUCUK (YENİ) --- */
-    /* Kaynak/Hedef ve Giriş alanını kapsayan orta bölüm */
+    /* --- YAZI ARKALARINA ŞEFFAF KUTUCUK --- */
+    /* Kaynak/Hedef, Giriş ve Kaydedilen Kelimeler başlığı */
     [data-testid="stVerticalBlock"] > div:nth-child(6), 
     [data-testid="stVerticalBlock"] > div:nth-child(7),
-    [data-testid="stVerticalBlock"] > div:nth-child(8) {{
-        background-color: rgba(255, 255, 255, 0.7); /* Hafif saydam beyaz */
+    [data-testid="stVerticalBlock"] > div:nth-child(8),
+    [data-testid="stVerticalBlock"] > div:nth-child(10) {{
+        background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
         border-radius: 20px;
         margin-bottom: 10px;
-        backdrop-filter: blur(5px); /* Arkadaki resmi hafif flulaştırır, yazıyı öne çıkarır */
+        backdrop-filter: blur(5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
@@ -67,18 +68,34 @@ st.markdown(
         border: 1px solid #dcdde1;
     }}
 
-    /* --- BUTONLAR --- */
-    .stButton>button {{
+    /* --- TABLO (DATA FRAME) BEYAZLAŞTIRMA --- */
+    /* Tablonun arka planını ve yazılarını düzeltir */
+    .stDataFrame, [data-testid="stTable"] {{
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 15px;
+        padding: 10px;
+    }}
+
+    /* Tablo içindeki yazıların siyah olması için */
+    div[data-testid="stDataFrame"] div[role="gridcell"] > div {{
+        color: black !important;
+    }}
+
+    /* --- BUTONLAR (EXCEL DAHİL) --- */
+    .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
         border: none;
+        width: 100%;
+    }}
+
+    .stDownloadButton>button:hover, .stButton>button:hover {{
+        background-color: #2980b9 !important;
+        border: none;
     }}
     
-    .stDataFrame div {{
-        color: black !important;
-    }}
     </style>
     """,
     unsafe_allow_html=True
@@ -152,4 +169,3 @@ if st.session_state.kelimeler:
         if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
-
