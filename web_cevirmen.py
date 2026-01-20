@@ -3,7 +3,8 @@ import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
 
-st.set_page_config(page_title="Dil Asistanım", page_icon="📝", layout="wide") # Layout wide yaparak alanı genişlettik
+# Sayfa genişliğini en baştan "wide" yapıyoruz
+st.set_page_config(page_title="Dil Asistanım", page_icon="📝", layout="wide")
 
 # --- TASARIM VE ARKA PLAN ---
 arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
@@ -11,7 +12,7 @@ arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 st.markdown(
     f"""
     <style>
-    /* Arka Plan */
+    /* 1. ARKA PLAN AYARI */
     .stApp {{
         background-image: url("{arka_plan_resmi}");
         background-attachment: fixed;
@@ -19,31 +20,43 @@ st.markdown(
         background-position: center;
     }}
 
-    /* TÜM İÇERİĞİ SOLA YASLAMA */
-    .block-container {{
-        margin-left: 0 !important;
+    /* 2. TÜM İÇERİĞİ SOLA YASLAMA (KESİN ÇÖZÜM) */
+    /* Streamlit'in ana kapsayıcısını sola çeker */
+    [data-testid="stAppViewBlockContainer"] {{
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
         padding-left: 2rem !important;
-        max-width: 800px !important; /* Çok yayılmaması için genişliği sınırladık */
+        padding-right: 2rem !important;
+        margin-left: 0px !important;
+        margin-right: auto !important;
+        max-width: 850px !important; /* Ekranın sonuna kadar uzayıp çirkin durmasın diye */
     }}
-    
-    /* ANA BAŞLIK - Sola Yaslı ve Belirgin */
+
+    /* Alt katmanları da sola yaslamaya zorlar */
+    .main .block-container {{
+        max-width: 850px !important;
+        padding-left: 2rem !important;
+        margin-left: 0 !important;
+    }}
+
+    /* 3. ANA BAŞLIK AYARI */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
                      -2px -2px 10px rgba(255, 255, 255, 1) !important;
         font-weight: 900 !important;
-        text-align: left !important; /* Sola yasladık */
-        padding-bottom: 10px;
+        text-align: left !important;
+        margin-left: 0 !important;
     }}
 
-    /* Genel Yazı Renkleri */
+    /* 4. GENEL YAZILAR VE PANELLER */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
         text-align: left !important;
     }}
 
-    /* --- PANELLER (CAM EFEKTİ) --- */
+    /* Cam efekti panelleri */
     .stAlert, [data-testid="stHorizontalBlock"], .stTextInput {{
         background-color: rgba(255, 255, 255, 0.7) !important;
         padding: 15px 25px;
@@ -51,9 +64,10 @@ st.markdown(
         backdrop-filter: blur(5px);
         margin-bottom: 15px;
         border: 1px solid rgba(255, 255, 255, 0.3);
+        width: 100% !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI --- */
+    /* 5. DOSYA YÜKLEME VE TABLO */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -61,11 +75,6 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    [data-testid="stFileUploaderDropzone"] {{
-        background-color: white !important;
-    }}
-
-    /* --- TABLO (LİSTE) BEYAZ VE SİYAH YAZILI --- */
     [data-testid="stTable"] {{
         background-color: white !important;
         border-radius: 15px !important;
@@ -77,7 +86,7 @@ st.markdown(
         color: black !important;
     }}
 
-    /* --- BUTONLAR --- */
+    /* 6. BUTONLAR */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
