@@ -18,7 +18,6 @@ st.markdown(
         background-position: center;
     }}
     
-    /* ANA BAŞLIK */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
@@ -26,16 +25,13 @@ st.markdown(
                      0px 0px 20px rgba(255, 255, 255, 0.8) !important;
         font-weight: 900 !important;
         text-align: center !important;
-        padding-bottom: 10px;
     }}
 
-    /* Genel Yazı Renkleri */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
     }}
 
-    /* PANELLER VE GİRİŞ KUTUSU */
     .stMarkdown div[data-testid="stMarkdownContainer"] p, .stAlert {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
@@ -51,7 +47,7 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* DOSYA YÜKLEME ALANI DÜZELTME */
+    /* DOSYA YÜKLEME ALANI BEYAZLATMA */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -68,14 +64,12 @@ st.markdown(
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
         font-weight: bold !important;
-        border: 1px solid #ccc !important;
     }}
 
     [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
 
-    /* TABLO VE BUTONLAR */
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
@@ -119,17 +113,23 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# AÇIKLAMA METNİ
 st.info("""
-Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
+Merhaba karıcığım bu senin için yaptığım dil asistanın. İstediğin kelimeyi çevirebilir, listeni Excel olarak indirebilir ve aşağıdan istediğin YouTube şarkısını açabilirsin!
 
-Seni seviyorum, iyi çalışmalar <3
+Seni seviyorum <3
 """)
 
-# --- VİDEO OYNATICI ---
-st.write("### 🎬 Senin İçin Bir Video")
-# Buradaki linki istediğin YouTube videosuyla değiştirebilirsin
-st.video("http://www.youtube.com/watch?v=7qaHdHpSjX8") 
+# --- DİNAMİK VİDEO OYNATICI ---
+st.write("### 🎬 Müzik Kutusu")
+video_linki = st.text_input("Dinlemek istediğin YouTube linkini buraya yapıştır:", 
+                            placeholder="https://www.youtube.com/watch?v=...")
+
+# Eğer link boşsa varsayılan bir şarkı göster, doluysa girilen linki aç
+if video_linki:
+    st.video(video_linki)
+else:
+    # Buraya senin istediğin varsayılan bir başlangıç şarkısı linki koyabilirsin
+    st.video("https://www.youtube.com/watch?v=7qaHdHpSjX8")
 
 st.write("### 📂 Eski Listeni Güncelle")
 yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak:", type=['xlsx'])
@@ -144,7 +144,7 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
-# Dil Değiştirme ve Giriş Alanı
+# Kelime Çeviri Bölümü
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
