@@ -18,7 +18,7 @@ st.markdown(
         background-position: center;
     }}
     
-    /* ANA BAŞLIK - Beyaz parlama efektiyle net okuma */
+    /* ANA BAŞLIK */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
@@ -35,8 +35,8 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- PANELLER (CAM EFEKTİ) --- */
-    .stMarkdown div[data-testid="stMarkdownContainer"] p {{
+    /* PANELLER VE GİRİŞ KUTUSU */
+    .stMarkdown div[data-testid="stMarkdownContainer"] p, .stAlert {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
         border-radius: 20px;
@@ -44,25 +44,14 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    [data-testid="stHorizontalBlock"] {{
-        background-color: rgba(255, 255, 255, 0.7);
-        padding: 10px 20px;
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
-        margin-bottom: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }}
-
-    /* --- GİRİŞ KUTUSU (BEYAZ YAPILDI) --- */
     .stTextInput input {{
         color: black !important;
         background-color: white !important;
         font-weight: bold !important;
         border-radius: 10px !important;
-        border: 1px solid #ddd !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI VE BROWSE FILES BUTONU (DÜZELTİLDİ) --- */
+    /* DOSYA YÜKLEME VE BROWSE BUTTON */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -70,44 +59,32 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    /* Browse Files Butonunu beyaz ve görünür yapar */
     [data-testid="stFileUploader"] button {{
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
-        border: 1px solid #ccc !important;
         font-weight: bold !important;
     }}
 
-    [data-testid="stFileUploaderDropzone"] {{
-        background-color: white !important;
-        color: black !important;
-    }}
-
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
-        color: black !important;
-    }}
-
-    /* --- TABLO (LİSTE) BEYAZ VE SİYAH YAZILI --- */
-    [data-testid="stTable"] {{
-        background-color: white !important;
-        border-radius: 15px !important;
-        border: 1px solid #ddd !important;
-        color: black !important;
-    }}
-
-    [data-testid="stTable"] td, [data-testid="stTable"] th {{
-        background-color: white !important;
-        color: black !important;
-    }}
-
-    /* --- BUTONLAR --- */
+    /* TABLO VE BUTONLAR */
+    [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
+    [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
+    
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
-        border: none;
-        width: 100%;
+    }}
+
+    /* Öpücük Kutusu Özel Stili */
+    .opucuk-kutusu {{
+        background-color: rgba(255, 182, 193, 0.8) !important;
+        border: 2px solid #ff4d6d !important;
+        color: #ff4d6d !important;
+        text-align: center;
+        padding: 10px;
+        border-radius: 15px;
+        margin-top: 30px;
     }}
     </style>
     """,
@@ -177,7 +154,7 @@ st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_chang
 
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
-    st.write("### 📚 Karıcığımın Kaydettiği Kelimeler")
+    st.write("### 📚 Kaydedilen Kelimeler")
     st.table(df) 
 
     output = BytesIO()
@@ -186,9 +163,15 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📥 Excel İçin Bana Tıkla Bebek", data=output.getvalue(), file_name="kelimelerim.xlsx")
+        st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        if st.button("🗑️ Sıfırlamak İçin Bana Tıkla Güzelim"):
+        if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
 
+# --- ÖPÜCÜK KUTUSU (SAYFANIN EN ALTI) ---
+st.divider()
+st.write("### 💖 Kocandan Bir Sürpriz")
+if st.button("💋 Beni Öp"):
+    st.balloons() # Ekranda balonlar uçar
+    st.success("Bende seni öptüm aşkım 💋😘")
