@@ -5,44 +5,56 @@ from io import BytesIO
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
-# --- TASARIM VE ARKA PLAN ---
-arka_plan_resmi = "https://i.hizliresim.com/j0r8m0l.jpg"
+# --- TASARIM VE HAREKETLİ ARKA PLAN (GIF) ---
+# Gönderdiğin yeni GIF linkini buraya ekledim
+arka_plan_gif = "https://i.hizliresim.com/4n7keha.gif"
 
 st.markdown(
     f"""
     <style>
     .stApp {{
-        background-image: url("{arka_plan_resmi}");
+        background-image: url("{arka_plan_gif}");
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
     }}
     
-    /* Belirttiğin bölgelerdeki yazıları SİYAH yapıyoruz */
+    /* Yazıları SİYAH/KOYU LACİVERT ve çok belirgin yapıyoruz */
     h1, h2, h3, p, span, label, .stMarkdown p {{
-        color: #2c3e50 !important; /* Koyu Gri / Siyah tonu */
-        font-weight: bold !important;
+        color: #1e272e !important; 
+        font-weight: 800 !important;
+        text-shadow: 1px 1px 3px rgba(255,255,255,0.7); /* Yazının okunması için beyaz gölge */
     }}
 
-    /* Dosya yükleme alanı açıklamaları için özel ayar */
+    /* Dosya yükleme alanı */
     .stFileUploader label, .stFileUploader small {{
-        color: #2c3e50 !important;
+        color: #1e272e !important;
     }}
 
-    /* Giriş kutusu ve butonların daha net görünmesi için */
+    /* Giriş kutusu (Daha belirgin beyaz) */
     .stTextInput input {{
         color: black !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid #2980b9 !important;
+        border-radius: 10px;
     }}
 
+    /* Butonlar (Daha şık mavi tonu) */
     .stButton>button {{
-        color: white !important; /* Buton yazısı beyaz kalsın */
-        background-color: #3498db !important; /* Buton belirgin mavi olsun */
-        border-radius: 10px;
+        color: white !important;
+        background-color: #2980b9 !important;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: 0.3s;
         border: none;
     }}
     
-    /* Tablo içindeki veriler siyah kalsın ki okunsun */
+    .stButton>button:hover {{
+        background-color: #3498db !important;
+        transform: scale(1.02);
+    }}
+    
+    /* Tablo verileri net görünsün */
     .stDataFrame div {{
         color: black !important;
     }}
@@ -51,7 +63,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- HAFIZA YÖNETİMİ ---
+# --- PROGRAM MANTIĞI ---
 if 'kelimeler' not in st.session_state:
     st.session_state.kelimeler = []
 if 'kaynak_dil' not in st.session_state:
@@ -59,7 +71,6 @@ if 'kaynak_dil' not in st.session_state:
 if 'hedef_dil' not in st.session_state:
     st.session_state.hedef_dil = 'tr'
 
-# --- FONKSİYONLAR ---
 def dil_degistir():
     st.session_state.kaynak_dil, st.session_state.hedef_dil = st.session_state.hedef_dil, st.session_state.kaynak_dil
 
@@ -75,39 +86,33 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Bağlantı hatası oluştu.")
+            st.error("Bağlantı hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-# Dosya Yükleme Bölümü
 st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel dosyasını buraya bırak:", type=['xlsx'])
+yuklenen_dosya = st.file_uploader("Excel dosyasını yükle:", type=['xlsx'])
 if yuklenen_dosya is not None:
-    try:
-        eski_df = pd.read_excel(yuklenen_dosya)
-        if st.button("Listeye Dahil Et"):
+    if st.button("Listeye Dahil Et"):
+        try:
+            eski_df = pd.read_excel(yuklenen_dosya)
             st.session_state.kelimeler = eski_df.to_dict('records')
-            st.success("Eski liste yüklendi!")
-    except:
-        st.error("Excel dosyası okunamadı.")
+            st.success("Liste başarıyla güncellendi!")
+        except:
+            st.error("Dosya okunurken hata oluştu.")
 
 st.divider()
 
-# Dil Değiştirme
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
-hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
-
 col_dil1, col_dil2, col_dil3 = st.columns([2,1,2])
 with col_dil1: st.write(f"**Kaynak:** {kaynak_etiket}")
 with col_dil2: st.button("🔄 Değiştir", on_click=dil_degistir)
-with col_dil3: st.write(f"**Hedef:** {hedef_etiket}")
+with col_dil3: st.write(f"**Hedef:** {'Türkçe' if st.session_state.hedef_dil == 'tr' else 'İngilizce'}")
 
-# Kelime Girişi
 st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
 
-# Liste ve Excel işlemleri
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
     st.write("### 📚 Kaydedilen Kelimeler")
