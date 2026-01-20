@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from deep_translator import GoogleTranslator
 from io import BytesIO
+import time  # Mesajları bekletip silmek için
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
@@ -18,7 +19,6 @@ st.markdown(
         background-position: center;
     }}
     
-    /* ANA BAŞLIK */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
@@ -28,19 +28,9 @@ st.markdown(
         text-align: center !important;
     }}
 
-    /* Genel Yazı Renkleri */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
-    }}
-
-    /* PANELLER VE GİRİŞ KUTUSU */
-    .stMarkdown div[data-testid="stMarkdownContainer"] p, .stAlert {{
-        background-color: rgba(255, 255, 255, 0.7);
-        padding: 15px 25px;
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
     .stTextInput input {{
@@ -50,7 +40,7 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI KÖKTEN ÇÖZÜM --- */
+    /* DOSYA YÜKLEME ALANI */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 15px;
@@ -58,50 +48,15 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    /* Sürükleme alanının içini ve arka planını zorla beyaz yapıyoruz */
     [data-testid="stFileUploaderDropzone"] {{
         background-color: white !important;
         color: black !important;
-        border: none !important;
     }}
 
-    /* 'Drag and drop' ve tüm iç yazıları siyah yapıyoruz */
-    [data-testid="stFileUploaderDropzoneInstructions"] div, 
-    [data-testid="stFileUploaderDropzoneInstructions"] span, 
-    [data-testid="stFileUploaderDropzoneInstructions"] small {{
-        color: black !important;
-        font-weight: bold !important;
-    }}
-
-    /* Yüklenen dosya bilgisini içeren kutu */
-    [data-testid="stFileUploaderFileData"] {{
-        background-color: #f8f9fa !important;
-        border: 1px solid #eee !important;
-        border-radius: 10px;
-        color: black !important;
-    }}
-    
-    /* Dosya adı yazısı */
-    [data-testid="stFileUploaderFileName"] {{
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
 
-    /* Browse Files butonu */
-    [data-testid="stFileUploader"] button {{
-        color: #1e272e !important;
-        background-color: #f1f2f6 !important;
-        font-weight: bold !important;
-        border: 1px solid #ccc !important;
-        transition: all 0.3s ease;
-    }}
-    
-    [data-testid="stFileUploader"] button:hover {{
-        background-color: #ffffff !important;
-        transform: scale(1.02);
-        box-shadow: 0px 0px 10px rgba(52, 152, 219, 0.3);
-    }}
-
-    /* TABLO VE DİĞERLERİ */
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
@@ -110,12 +65,10 @@ st.markdown(
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
-        border: none;
         transition: all 0.3s ease !important;
     }}
 
-    .stButton>button:hover, .stDownloadButton>button:hover {{
-        background-color: #2980b9 !important;
+    .stButton>button:hover {{
         transform: translateY(-3px) scale(1.02);
         box-shadow: 0px 10px 20px rgba(52, 152, 219, 0.6) !important;
     }}
@@ -131,6 +84,8 @@ if 'kaynak_dil' not in st.session_state:
     st.session_state.kaynak_dil = 'en'
 if 'hedef_dil' not in st.session_state:
     st.session_state.hedef_dil = 'tr'
+if 'yuklenen_dosya_adi' not in st.session_state:
+    st.session_state.yuklenen_dosya_adi = None
 
 def dil_degistir():
     st.session_state.kaynak_dil, st.session_state.hedef_dil = st.session_state.hedef_dil, st.session_state.kaynak_dil
@@ -153,41 +108,49 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
-st.info("""
-Merhaba karıcığım bu senin için yaptığım dil asistanın. İstediğin kelimeyi çevirebilir, listeni Excel olarak indirebilir ve aşağıdan istediğin YouTube şarkısını açabilirsin!
+st.info("Seni seviyorum karıcığım, iyi çalışmalar! <3")
 
-Seni seviyorum <3
-""")
-
+# --- MÜZİK KUTUSU ---
 st.write("### 🎬 Müzik Kutusu")
-video_linki = st.text_input("Dinlemek istediğin YouTube linkini buraya yapıştır:", 
-                            placeholder="https://www.youtube.com/watch?v=...")
-
-if video_linki:
-    st.video(video_linki)
-else:
-    st.video("https://www.youtube.com/watch?v=7qaHdHpSjX8")
+video_linki = st.text_input("Şarkı linkini buraya at atgum:", placeholder="https://www.youtube.com/watch?v=...")
+st.video(video_linki if video_linki else "https://www.youtube.com/watch?v=7qaHdHpSjX8")
 
 st.write("### 📂 Eski Listeni Güncelleyebilirsin Bebeğim")
 yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak ben alırım atgum:", type=['xlsx'])
+
+# Geçici mesaj alanı (Dosya için)
+dosya_mesaj_alani = st.empty()
+
 if yuklenen_dosya is not None:
-    try:
-        eski_df = pd.read_excel(yuklenen_dosya)
-        if st.button("Listeye Dahil Et"):
-            st.session_state.kelimeler = eski_df.to_dict('records')
-            st.success("Eski liste yüklendi aferin karıcığım!")
-    except:
-        st.error("Excel okunamadı atgum.")
+    if st.button("Listeye Dahil Et"):
+        # Dosya zaten yüklendi mi kontrolü
+        if st.session_state.yuklenen_dosya_adi == yuklenen_dosya.name:
+            dosya_mesaj_alani.warning("Karıcığımmm zaten dahil ettin bunu 🤭")
+            time.sleep(4)
+            dosya_mesaj_alani.empty()
+        else:
+            try:
+                eski_df = pd.read_excel(yuklenen_dosya)
+                st.session_state.kelimeler = eski_df.to_dict('records')
+                st.session_state.yuklenen_dosya_adi = yuklenen_dosya.name
+                dosya_mesaj_alani.success("Eski liste yüklendi aferin karıcığım! ✅")
+                time.sleep(5)
+                dosya_mesaj_alani.empty()
+            except:
+                dosya_mesaj_alani.error("Excel okunamadı atgum.")
+                time.sleep(3)
+                dosya_mesaj_alani.empty()
 
 st.divider()
 
+# Kelime Giriş Alanı
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
-col_dil1, col_dil2, col_dil3 = st.columns([2,1,2])
-with col_dil1: st.write(f"**Kaynak:** {kaynak_etiket}")
-with col_dil2: st.button("🔄 Değiştir", on_click=dil_degistir)
-with col_dil3: st.write(f"**Hedef:** {hedef_etiket}")
+col1, col2, col3 = st.columns([2,1,2])
+with col1: st.write(f"**Kaynak:** {kaynak_etiket}")
+with col2: st.button("🔄 Değiştir", on_click=dil_degistir)
+with col3: st.write(f"**Hedef:** {hedef_etiket}")
 
 st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
 
@@ -206,10 +169,16 @@ if st.session_state.kelimeler:
     with c2:
         if st.button("🗑️ Bana Tıkla ve Sıfırla Güzelim"):
             st.session_state.kelimeler = []
+            st.session_state.yuklenen_dosya_adi = None
             st.rerun()
 
+# --- ÖPÜCÜK KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
+opucuk_mesaj_alani = st.empty() # Öpücük mesajı için boş alan
+
 if st.button("💋 Beni Öp"):
-    st.balloons() 
-    st.success("Bende seni öptüm aşkım 💋😘")
+    st.balloons()
+    opucuk_mesaj_alani.success("Bende seni öptüm aşkım 💋😘")
+    time.sleep(5) # 5 saniye bekle
+    opucuk_mesaj_alani.empty() # Mesajı sil
