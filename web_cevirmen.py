@@ -6,7 +6,7 @@ from io import BytesIO
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
 # --- TASARIM VE ARKA PLAN ---
-arka_plan_resmi = "https://i.hizliresim.com/j0r8m0l.jpg"
+arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 
 st.markdown(
     f"""
@@ -124,4 +124,5 @@ if st.session_state.kelimeler:
         if st.button("🗑️ Listeyi Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
+
 
