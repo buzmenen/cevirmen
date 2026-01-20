@@ -11,10 +11,10 @@ arka_plan_resmi = "https://i.hizliresim.com/tbkwdlu.jpg"
 st.markdown(
     f"""
     <style>
-    /* Tüm sayfanın ölçeğini %80 yapıyoruz */
+    /* Ölçeği %90 yaparak biraz daha büyütüyoruz */
     html, body, [data-testid="stAppViewContainer"] {{
-        zoom: 0.8; 
-        -moz-transform: scale(0.8); /* Firefox desteği için */
+        zoom: 0.9; 
+        -moz-transform: scale(0.9);
         -moz-transform-origin: 0 0;
     }}
 
@@ -25,32 +25,37 @@ st.markdown(
         background-position: center;
     }}
     
-    /* Ana kutuyu biraz daha daraltıp kibarlaştırıyoruz */
+    /* Ana kutuyu biraz daha genişleterek ferahlatıyoruz (900px yaptık) */
     .main .block-container {{
-        background-color: rgba(255, 255, 255, 0.85); 
-        padding: 2.5rem;
-        border-radius: 20px;
-        max-width: 800px; /* Sayfanın çok yayılmasını engeller */
+        background-color: rgba(255, 255, 255, 0.88); 
+        padding: 3rem;
+        border-radius: 25px;
+        max-width: 900px; 
         margin: auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }}
 
-    /* Yazı tiplerini biraz küçültüyoruz */
-    h1 {{ font-size: 2rem !important; color: #2c3e50 !important; }}
-    h3 {{ font-size: 1.2rem !important; color: #2c3e50 !important; }}
+    /* Yazıları orta boy ve net hale getirdik */
+    h1 {{ font-size: 2.4rem !important; color: #1e272e !important; text-align: center; }}
+    h3 {{ font-size: 1.4rem !important; color: #1e272e !important; }}
     p, span, label {{ 
-        color: #2c3e50 !important; 
-        font-size: 1rem !important;
+        color: #1e272e !important; 
+        font-size: 1.1rem !important;
         font-weight: 700 !important;
     }}
 
+    /* Giriş kutusunu belirginleştirdik */
     .stTextInput input {{
-        font-size: 1rem !important;
-        padding: 10px !important;
+        font-size: 1.1rem !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
     }}
 
+    /* Buton boyutlarını ideal seviyeye çektik */
     .stButton>button {{
-        font-size: 0.9rem !important;
-        padding: 5px 20px !important;
+        font-size: 1rem !important;
+        padding: 8px 25px !important;
+        border-radius: 12px;
     }}
     </style>
     """,
@@ -80,34 +85,36 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Çeviri hatası.")
+            st.error("Bağlantı hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
 st.write("### 📂 Eski Listeni Güncelle")
-yuklenen_dosya = st.file_uploader("Excel yükle:", type=['xlsx'])
+yuklenen_dosya = st.file_uploader("Önceki Excel dosyanı seç:", type=['xlsx'])
 if yuklenen_dosya is not None:
     if st.button("Dahil Et"):
         eski_df = pd.read_excel(yuklenen_dosya)
         st.session_state.kelimeler = eski_df.to_dict('records')
-        st.success("Yüklendi!")
+        st.success("Liste başarıyla aktarıldı!")
 
 st.divider()
 
-# Dil Değiştirme
+# Dil Değiştirme Paneli
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
+hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
+
 col1, col2, col3 = st.columns([2,1,2])
 with col1: st.write(f"**Kaynak:** {kaynak_etiket}")
 with col2: st.button("🔄 Değiştir", on_click=dil_degistir)
-with col3: st.write(f"**Hedef:** {'Türkçe' if st.session_state.hedef_dil == 'tr' else 'İngilizce'}")
+with col3: st.write(f"**Hedef:** {hedef_etiket}")
 
-st.text_input(f"{kaynak_etiket} kelime yaz:", key="yeni_kelime", on_change=kelime_ekle)
+st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_change=kelime_ekle)
 
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
-    st.write("### 📚 Kelime Listesi")
+    st.write("### 📚 Kelimelerim")
     st.dataframe(df, use_container_width=True)
 
     output = BytesIO()
@@ -116,8 +123,8 @@ if st.session_state.kelimeler:
     
     c1, c2 = st.columns(2)
     with c1:
-        st.download_button("📥 Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
+        st.download_button("📥 Güncel Excel İndir", data=output.getvalue(), file_name="kelimelerim.xlsx")
     with c2:
-        if st.button("🗑️ Sıfırla"):
+        if st.button("🗑️ Listeyi Temizle"):
             st.session_state.kelimeler = []
             st.rerun()
