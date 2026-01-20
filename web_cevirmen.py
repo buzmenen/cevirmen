@@ -36,7 +36,6 @@ st.markdown(
     }}
 
     /* --- PANELLER (CAM EFEKTİ) --- */
-    /* Sıralamayı düzelttim: Boş kutuları değil, sadece içeriği olanları boyar */
     .stMarkdown div[data-testid="stMarkdownContainer"] p {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
@@ -45,8 +44,7 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    /* Kaynak/Hedef ve Giriş alanını kapsayan bloklar */
-    [data-testid="stHorizontalBlock"], .stTextInput {{
+    [data-testid="stHorizontalBlock"] {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 10px 20px;
         border-radius: 20px;
@@ -55,12 +53,29 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    /* --- DOSYA YÜKLEME ALANI (TAM BEYAZ) --- */
+    /* --- GİRİŞ KUTUSU (BEYAZ YAPILDI) --- */
+    .stTextInput input {{
+        color: black !important;
+        background-color: white !important;
+        font-weight: bold !important;
+        border-radius: 10px !important;
+        border: 1px solid #ddd !important;
+    }}
+
+    /* --- DOSYA YÜKLEME ALANI VE BROWSE FILES BUTONU (DÜZELTİLDİ) --- */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
         border-radius: 15px;
         border: 2px dashed #3498db !important;
+    }}
+
+    /* Browse Files Butonunu beyaz ve görünür yapar */
+    [data-testid="stFileUploader"] button {{
+        color: #1e272e !important;
+        background-color: #f1f2f6 !important;
+        border: 1px solid #ccc !important;
+        font-weight: bold !important;
     }}
 
     [data-testid="stFileUploaderDropzone"] {{
@@ -176,4 +191,3 @@ if st.session_state.kelimeler:
         if st.button("🗑️ Sıfırla"):
             st.session_state.kelimeler = []
             st.rerun()
-
