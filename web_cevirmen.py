@@ -31,7 +31,8 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI TAM DÜZELTME --- */
+    /* --- DOSYA YÜKLEME ALANI (TAM TEMİZLİK) --- */
+    /* Dış çerçeve */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 15px !important;
@@ -39,48 +40,48 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    /* Sürükleme alanı içindeki genel yazılar */
+    /* O Siyah Kalan İç Kutu (Dropzone) */
+    [data-testid="stFileUploaderDropzone"] {{
+        background-color: white !important; /* İÇİ ARTIK BEYAZ */
+        border: none !important;
+    }}
+
+    /* Sürükleme alanı içindeki ikon ve yazılar */
     [data-testid="stFileUploaderDropzoneInstructions"] div,
-    [data-testid="stFileUploaderDropzoneInstructions"] span {{
+    [data-testid="stFileUploaderDropzoneInstructions"] span,
+    [data-testid="stFileUploaderDropzoneInstructions"] small,
+    [data-testid="stBaseButton-secondary"] p {{
         color: black !important;
         font-weight: bold !important;
     }}
 
-    /* BROWSE FILES BUTONU VE İÇİNDEKİ YAZI */
+    /* BROWSE FILES BUTONU */
     [data-testid="stFileUploader"] button {{
         background-color: #f1f2f6 !important;
         border: 1px solid #ccc !important;
-        color: black !important; /* Yazı rengini siyah yap */
+        color: black !important;
+    }}
+
+    /* YÜKLENEN DOSYA BİLGİLERİ */
+    [data-testid="stFileUploaderFileData"] {{
+        background-color: #f8f9fa !important;
+        border-radius: 10px !important;
     }}
     
-    /* Butonun içindeki metne direkt müdahale */
-    [data-testid="stFileUploader"] button div p {{
+    [data-testid="stFileUploaderFileName"], 
+    [data-testid="stFileUploaderFileData"] div {{
         color: black !important;
         font-weight: bold !important;
     }}
 
-    /* YÜKLENEN DOSYA İSMİ VE DETAYLAR */
-    [data-testid="stFileUploaderFileData"] div, 
-    [data-testid="stFileUploaderFileData"] span,
-    [data-testid="stFileUploaderFileName"],
-    .st-emotion-cache-1erivf3 {{ 
-        color: black !important;
-        font-weight: bold !important;
-    }}
-
-    /* Dosya silme (X) butonu rengi */
-    [data-testid="stFileUploaderFileData"] button {{
-        color: black !important;
-    }}
-
-    /* Giriş kutusu (Input) siyahlığı engelleme */
+    /* GİRİŞ KUTUSU (INPUT) */
     .stTextInput input {{
         color: black !important;
         background-color: white !important;
         font-weight: bold !important;
     }}
 
-    /* --- BUTONLAR --- */
+    /* GENEL BUTON EFEKTLERİ */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
@@ -131,6 +132,7 @@ st.title("📝 Karıcığımın Dil Asistanı")
 
 st.info("Seni seviyorum karıcığım, iyi çalışmalar! <3")
 
+# --- MÜZİK KUTUSU ---
 st.write("### 🎬 Müzik Kutusu")
 video_linki = st.text_input("Şarkı linkini buraya at atgum:", placeholder="https://www.youtube.com/watch?v=...")
 st.video(video_linki if video_linki else "https://www.youtube.com/watch?v=7qaHdHpSjX8")
@@ -142,6 +144,7 @@ dosya_mesaj_alani = st.empty()
 
 if yuklenen_dosya is not None:
     if st.button("Listeye Dahil Et"):
+        # Mükerrer dosya kontrolü
         if st.session_state.yuklenen_dosya_adi == yuklenen_dosya.name:
             dosya_mesaj_alani.warning("Karıcığımmm zaten dahil ettin bunu 🤭")
             time.sleep(4)
@@ -152,7 +155,7 @@ if yuklenen_dosya is not None:
                 st.session_state.kelimeler = eski_df.to_dict('records')
                 st.session_state.yuklenen_dosya_adi = yuklenen_dosya.name
                 dosya_mesaj_alani.success("Eski liste yüklendi aferin karıcığım! ✅")
-                time.sleep(5)
+                time.sleep(5) # 5 saniye sonra silinir
                 dosya_mesaj_alani.empty()
             except:
                 dosya_mesaj_alani.error("Excel okunamadı atgum.")
@@ -161,6 +164,7 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
+# Kelime Çeviri
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
@@ -189,6 +193,7 @@ if st.session_state.kelimeler:
             st.session_state.yuklenen_dosya_adi = None
             st.rerun()
 
+# --- ÖPÜCÜK KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
 opucuk_mesaj_alani = st.empty()
@@ -196,5 +201,5 @@ opucuk_mesaj_alani = st.empty()
 if st.button("💋 Beni Öp"):
     st.balloons()
     opucuk_mesaj_alani.success("Bende seni öptüm aşkım 💋😘")
-    time.sleep(5)
+    time.sleep(5) # 5 saniye sonra silinir
     opucuk_mesaj_alani.empty()
