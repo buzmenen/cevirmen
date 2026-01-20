@@ -51,7 +51,7 @@ st.markdown(
         border-radius: 10px !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI TAM DÜZELTME --- */
+    /* DOSYA YÜKLEME ALANI DÜZELTME */
     [data-testid="stFileUploader"] {{
         background-color: white !important;
         padding: 10px;
@@ -59,14 +59,11 @@ st.markdown(
         border: 2px dashed #3498db !important;
     }}
 
-    /* Siyahlığı gideren ve iç alanı beyaz yapan kısım */
     [data-testid="stFileUploaderDropzone"] {{
         background-color: white !important;
         color: black !important;
-        border: none !important;
     }}
 
-    /* Browse Files butonu */
     [data-testid="stFileUploader"] button {{
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
@@ -74,7 +71,6 @@ st.markdown(
         border: 1px solid #ccc !important;
     }}
 
-    /* Sürükleme talimatı yazısı */
     [data-testid="stFileUploaderDropzoneInstructions"] div {{
         color: black !important;
     }}
@@ -88,17 +84,6 @@ st.markdown(
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
-    }}
-
-    /* Öpücük Kutusu Özel Stili */
-    .opucuk-kutusu {{
-        background-color: rgba(255, 182, 193, 0.8) !important;
-        border: 2px solid #ff4d6d !important;
-        color: #ff4d6d !important;
-        text-align: center;
-        padding: 10px;
-        border-radius: 15px;
-        margin-top: 30px;
     }}
     </style>
     """,
@@ -134,13 +119,17 @@ def kelime_ekle():
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
+# AÇIKLAMA METNİ
 st.info("""
 Merhaba karıcığım bu senin için yaptığım dil asistanın. Artık zorlanmadan istediğin gibi Türkçeden İngilizce hatta İngilizceden Türkçeye çeviri bile yapabilirsin. 
 
-Ama unutma eğer yazdığın kelimenin karşılığı olmazsa tabloya aynen o kelime tekrar yazılır. Lütfen buna dikkat et. 
-
 Seni seviyorum, iyi çalışmalar <3
 """)
+
+# --- VİDEO OYNATICI ---
+st.write("### 🎬 Senin İçin Bir Video")
+# Buradaki linki istediğin YouTube videosuyla değiştirebilirsin
+st.video("http://www.youtube.com/watch?v=7qaHdHpSjX8") 
 
 st.write("### 📂 Eski Listeni Güncelle")
 yuklenen_dosya = st.file_uploader("Dosyanı buraya bırak:", type=['xlsx'])
@@ -155,6 +144,7 @@ if yuklenen_dosya is not None:
 
 st.divider()
 
+# Dil Değiştirme ve Giriş Alanı
 kaynak_etiket = "İngilizce" if st.session_state.kaynak_dil == 'en' else "Türkçe"
 hedef_etiket = "Türkçe" if st.session_state.hedef_dil == 'tr' else "İngilizce"
 
@@ -182,7 +172,7 @@ if st.session_state.kelimeler:
             st.session_state.kelimeler = []
             st.rerun()
 
-# --- ÖPÜCÜK KUTUSU (SAYFANIN EN ALTI) ---
+# --- ÖPÜCÜK KUTUSU ---
 st.divider()
 st.write("### 💖 Kocandan Bir Sürpriz")
 if st.button("💋 Beni Öp"):
