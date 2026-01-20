@@ -18,6 +18,7 @@ st.markdown(
         background-position: center;
     }}
     
+    /* ANA BAŞLIK */
     h1 {{
         color: #1e272e !important;
         text-shadow: 2px 2px 10px rgba(255, 255, 255, 1), 
@@ -27,11 +28,13 @@ st.markdown(
         text-align: center !important;
     }}
 
+    /* Genel Yazı Renkleri */
     h2, h3, p, span, label, .stMarkdown p {{
         color: #1e272e !important; 
         font-weight: bold !important;
     }}
 
+    /* PANELLER VE GİRİŞ KUTUSU */
     .stMarkdown div[data-testid="stMarkdownContainer"] p, .stAlert {{
         background-color: rgba(255, 255, 255, 0.7);
         padding: 15px 25px;
@@ -64,20 +67,46 @@ st.markdown(
         color: #1e272e !important;
         background-color: #f1f2f6 !important;
         font-weight: bold !important;
+        transition: all 0.3s ease; /* Yumuşak geçiş için */
+    }}
+    
+    [data-testid="stFileUploader"] button:hover {{
+        background-color: #ffffff !important;
+        transform: scale(1.05);
+        box-shadow: 0px 0px 15px rgba(52, 152, 219, 0.5);
     }}
 
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
-        color: black !important;
-    }}
-
+    /* TABLO */
     [data-testid="stTable"] {{ background-color: white !important; border-radius: 15px !important; }}
     [data-testid="stTable"] td, [data-testid="stTable"] th {{ color: black !important; background-color: white !important; }}
     
+    /* --- PARLAYAN BUTON EFEKTLERİ --- */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
         border-radius: 12px;
         font-weight: bold;
+        border: none;
+        transition: all 0.3s ease !important; /* Efektin hızı */
+    }}
+
+    /* Fare üzerine gelince (Hover) */
+    .stButton>button:hover, .stDownloadButton>button:hover {{
+        background-color: #2980b9 !important; /* Rengi biraz koyulaşır */
+        transform: translateY(-3px) scale(1.02); /* Hafif yukarı kalkar ve büyür */
+        box-shadow: 0px 10px 20px rgba(52, 152, 219, 0.6) !important; /* Parlama efekti */
+        cursor: pointer;
+    }}
+
+    /* Butona basılınca (Active) */
+    .stButton>button:active, .stDownloadButton>button:active {{
+        transform: translateY(1px);
+        box-shadow: 0px 5px 10px rgba(52, 152, 219, 0.4) !important;
+    }}
+    
+    /* Öpücük Butonuna Özel Pembe Parlama */
+    div.stButton > button:first-child:contains("💋") {{
+       /* Bu kısım özel seçici gerektirebilir, aşağıda butonun kendisine direkt ekledik */
     }}
     </style>
     """,
@@ -119,16 +148,14 @@ Merhaba karıcığım bu senin için yaptığım dil asistanın. İstediğin kel
 Seni seviyorum <3
 """)
 
-# --- DİNAMİK VİDEO OYNATICI ---
+# --- MÜZİK KUTUSU ---
 st.write("### 🎬 Müzik Kutusu")
 video_linki = st.text_input("Dinlemek istediğin YouTube linkini buraya yapıştır:", 
                             placeholder="https://www.youtube.com/watch?v=...")
 
-# Eğer link boşsa varsayılan bir şarkı göster, doluysa girilen linki aç
 if video_linki:
     st.video(video_linki)
 else:
-    # Buraya senin istediğin varsayılan bir başlangıç şarkısı linki koyabilirsin
     st.video("https://www.youtube.com/watch?v=7qaHdHpSjX8")
 
 st.write("### 📂 Eski Listeni Güncelle")
