@@ -5,8 +5,8 @@ from io import BytesIO
 
 st.set_page_config(page_title="Dil Asistanım", page_icon="📝")
 
-st.title("📝 Kelime Çeviri ve Excel Oluşturucu")
-st.write("Kelimeleri girin, çevirileri görün ve listenizi Excel olarak indirin.")
+st.title("📝 Karımın Çeviri Asistanı")
+st.write("Bu kod sayesinde istediğin kelimenin ingilizce halini çevirebilir ve excele kaydedebilirsin karıcığım. İngilizce karşılığı yoksa olduğu gibi kaydeder.")
 
 # Hafızayı başlat
 if 'kelimeler' not in st.session_state:
@@ -32,7 +32,7 @@ def kelime_ekle():
     st.session_state.yeni_kelime = ""
 
 # Giriş alanı (on_change kullanarak Enter'a basıldığında fonksiyonu çağırıyoruz)
-st.text_input("İngilizce kelime yazın ve Enter'a basın:", key="yeni_kelime", on_change=kelime_ekle)
+st.text_input("Karıcığım lütfen istediğin kelimeyi yaz ve entera bas:", key="yeni_kelime", on_change=kelime_ekle)
 
 # Eklenen kelimeleri tablo olarak göster
 if st.session_state.kelimeler:
@@ -49,13 +49,14 @@ if st.session_state.kelimeler:
     
     with col1:
         st.download_button(
-            label="📥 Excel Dosyasını İndir",
+            label="📥 EXCEL İÇİN BANA TIKLA BEBEĞİM OW YEAHHH",
             data=output.getvalue(),
             file_name="kelimelerim.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
     with col2:
-        if st.button("🗑️ Listeyi Temizle"):
+        if st.button("🗑️ Listeyi Temizleyebilirsin karıcığım <3"):
             st.session_state.kelimeler = []
             st.rerun()
+
