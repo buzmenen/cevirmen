@@ -24,8 +24,7 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- YAZI ARKALARINA ŞEFFAF KUTUCUK --- */
-    /* Kaynak/Hedef, Giriş ve Kaydedilen Kelimeler başlığı */
+    /* --- PANELLER --- */
     [data-testid="stVerticalBlock"] > div:nth-child(6), 
     [data-testid="stVerticalBlock"] > div:nth-child(7),
     [data-testid="stVerticalBlock"] > div:nth-child(8),
@@ -38,50 +37,42 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.3);
     }}
 
-    /* --- DOSYA YÜKLEME ALANI --- */
-    [data-testid="stFileUploader"] {{
+    /* --- TABLO (LİSTE) TAM BEYAZ YAPMA --- */
+    /* Tabloyu kapsayan ana alanı bembeyaz yapar */
+    [data-testid="stTable"] {{
         background-color: white !important;
-        padding: 10px;
-        border-radius: 15px;
-        border: 2px dashed #3498db !important;
+        border-radius: 15px !important;
+        overflow: hidden !important;
+        border: 1px solid #ddd !important;
     }}
 
-    [data-testid="stFileUploader"] section {{
+    /* Tablo içindeki hücre yazıları SİYAH */
+    [data-testid="stTable"] td {{
         background-color: white !important;
         color: black !important;
+        font-weight: 500 !important;
     }}
 
-    [data-testid="stFileUploaderDropzoneInstructions"] div {{
+    /* Tablo BAŞLIKLARI (İngilizce - Türkçe yazan yer) */
+    [data-testid="stTable"] th {{
+        background-color: #f1f2f6 !important;
         color: black !important;
-    }}
-    
-    [data-testid="stFileUploader"] button {{
-        color: white !important;
-        background-color: #2c3e50 !important;
+        font-weight: bold !important;
     }}
 
-    /* --- GİRİŞ KUTUSU --- */
+    /* --- GİRİŞ KUTUSU VE DOSYA YÜKLEYİCİ --- */
     .stTextInput input {{
         color: black !important;
         background-color: white !important;
         font-weight: bold;
-        border: 1px solid #dcdde1;
     }}
-
-    /* --- TABLO (DATA FRAME) BEYAZLAŞTIRMA --- */
-    /* Tablonun arka planını ve yazılarını düzeltir */
-    .stDataFrame, [data-testid="stTable"] {{
-        background-color: rgba(255, 255, 255, 0.9) !important;
+    
+    [data-testid="stFileUploader"] {{
+        background-color: white !important;
         border-radius: 15px;
-        padding: 10px;
     }}
 
-    /* Tablo içindeki yazıların siyah olması için */
-    div[data-testid="stDataFrame"] div[role="gridcell"] > div {{
-        color: black !important;
-    }}
-
-    /* --- BUTONLAR (EXCEL DAHİL) --- */
+    /* --- BUTONLAR --- */
     .stButton>button, .stDownloadButton>button {{
         color: white !important;
         background-color: #3498db !important;
@@ -90,18 +81,12 @@ st.markdown(
         border: none;
         width: 100%;
     }}
-
-    .stDownloadButton>button:hover, .stButton>button:hover {{
-        background-color: #2980b9 !important;
-        border: none;
-    }}
-    
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# --- HAFIZA YÖNETİMİ ---
+# --- PROGRAM MANTIĞI ---
 if 'kelimeler' not in st.session_state:
     st.session_state.kelimeler = []
 if 'kaynak_dil' not in st.session_state:
@@ -124,7 +109,7 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Bağlantı hatası.")
+            st.error("Çeviri hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
@@ -156,7 +141,8 @@ st.text_input(f"{kaynak_etiket} bir kelime yazın:", key="yeni_kelime", on_chang
 if st.session_state.kelimeler:
     df = pd.DataFrame(st.session_state.kelimeler)
     st.write("### 📚 Kaydedilen Kelimeler")
-    st.dataframe(df, use_container_width=True)
+    # BURADA st.table KULLANDIK (Kesin Beyaz Olması İçin)
+    st.table(df) 
 
     output = BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
