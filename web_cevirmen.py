@@ -50,8 +50,8 @@ st.markdown(
 )
 # ---------------------------------------
 
-st.title("📝 Dil Asistanım")
-st.write("Hoş geldin! Kelimelerini yazıp 'Enter'a basarak listeni oluşturabilirsin.")
+st.title("📝 Karıcığımın Dil Asistanı")
+st.write("Hoş geldin! Kelimelerini yazıp 'Enter'a basarak listeni oluşturabilirsin karıcığım. Eğer yazdığın kelimenin karşılığı yoksa aynı kelimeyi verir dikkat et ltfn.")
 
 # Hafızayı başlat
 if 'kelimeler' not in st.session_state:
@@ -79,7 +79,7 @@ def kelime_ekle():
     st.session_state.yeni_kelime = ""
 
 # Giriş alanı
-st.text_input("İngilizce kelime yazın:", key="yeni_kelime", on_change=kelime_ekle, placeholder="Örn: Adventure")
+st.text_input("İngilizce kelimeni yaz karıcığım:", key="yeni_kelime", on_change=kelime_ekle, placeholder="Örn: Adventure")
 
 # Liste varsa tabloyu ve butonları göster
 if st.session_state.kelimeler:
@@ -96,13 +96,13 @@ if st.session_state.kelimeler:
     
     with c1:
         st.download_button(
-            label="📥 Excel Olarak İndir",
+            label="📥 Excel Olarak İndirebilirsin karıcığım",
             data=output.getvalue(),
             file_name="kelimelerim.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
     with c2:
-        if st.button("🗑️ Tüm Listeyi Sil"):
+        if st.button("🗑️ İstersen hepsini silebilirsin güzelim"):
             st.session_state.kelimeler = []
             st.rerun()
