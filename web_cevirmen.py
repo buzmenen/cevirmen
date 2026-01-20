@@ -24,27 +24,36 @@ st.markdown(
         font-weight: bold !important;
     }}
 
-    /* --- DOSYA YÜKLEME ALANI (UPLOADER) DÜZENLEME --- */
-    /* Dış kutuyu beyaz yapıyoruz */
+    /* --- DOSYA YÜKLEME ALANI (TAM DÜZENLEME) --- */
+    /* 1. Dış Çerçeve */
     [data-testid="stFileUploader"] {{
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        padding: 15px;
+        background-color: white !important;
+        padding: 10px;
         border-radius: 15px;
-        border: 2px dashed #3498db !important;
-    }}
-    
-    /* "Drag and drop file here" ve "Limit 200MB" gibi tüm iç yazıları SİYAH yapıyoruz */
-    [data-testid="stFileUploader"] section {{
-        color: black !important;
-    }}
-    
-    [data-testid="stFileUploader"] label {{
-        color: black !important;
     }}
 
-    [data-testid="stFileUploader"] small {{
-        color: #2c3e50 !important;
-        font-weight: bold !important;
+    /* 2. İçteki Siyah Kutuyu Beyaz Yapma */
+    [data-testid="stFileUploader"] section {{
+        background-color: white !important;
+        color: black !important;
+        border: 2px dashed #3498db !important;
+    }}
+
+    /* 3. "Drag and drop" ve "Limit" yazılarını siyah yapma */
+    [data-testid="stFileUploaderDropzoneInstructions"] div {{
+        color: black !important;
+    }}
+    
+    /* 4. "Browse files" butonunu düzenleme */
+    [data-testid="stFileUploader"] button {{
+        color: white !important;
+        background-color: #2c3e50 !important;
+        border: 1px solid black !important;
+    }}
+
+    /* 5. Yüklenen dosya bilgisini siyah yapma */
+    [data-testid="stFileUploaderFileName"] {{
+        color: black !important;
     }}
     /* ----------------------------------------------- */
 
@@ -78,7 +87,6 @@ if 'kaynak_dil' not in st.session_state:
 if 'hedef_dil' not in st.session_state:
     st.session_state.hedef_dil = 'tr'
 
-# --- FONKSİYONLAR ---
 def dil_degistir():
     st.session_state.kaynak_dil, st.session_state.hedef_dil = st.session_state.hedef_dil, st.session_state.kaynak_dil
 
@@ -94,14 +102,13 @@ def kelime_ekle():
                 ing, tr = ceviri, giris
             st.session_state.kelimeler.append({"İngilizce": ing, "Türkçe": tr})
         except:
-            st.error("Bağlantı hatası oluştu.")
+            st.error("Bağlantı hatası.")
     st.session_state.yeni_kelime = ""
 
 # --- ARAYÜZ ---
 st.title("📝 Karıcığımın Dil Asistanı")
 
 st.write("### 📂 Eski Listeni Güncelle")
-# Dosya yükleme alanı artık beyaz ve yazıları siyah
 yuklenen_dosya = st.file_uploader("Daha önce indirdiğin Excel dosyasını buraya bırak:", type=['xlsx'])
 if yuklenen_dosya is not None:
     try:
